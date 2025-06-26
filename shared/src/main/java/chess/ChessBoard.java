@@ -10,7 +10,9 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    private ChessPiece[][] squares = new ChessPiece[8][8];
+    //changed to ChessPiece[9][9] to make sure array does not get out of range
+    //used to be new ChessPiece[8][8]
+    private ChessPiece[][] squares = new ChessPiece[9][9];
     public ChessBoard() {
         
     }

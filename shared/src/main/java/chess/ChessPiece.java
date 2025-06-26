@@ -13,6 +13,7 @@ import java.util.Objects;
 public class ChessPiece {
 private ChessGame.TeamColor pieceColor;
 private ChessPiece.PieceType type;
+
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
@@ -55,68 +56,111 @@ private ChessPiece.PieceType type;
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
 
-    // name of piece
-        ChessPiece.PieceType piece = board.getPiece(myPosition).getPieceType();
+    // get piece type & color
+        ChessPiece myPiece = board.getPiece(myPosition);
+        ChessGame.TeamColor myPieceColor = board.getPiece(myPosition).getTeamColor();
+        ChessPiece.PieceType myPieceType = board.getPiece(myPosition).getPieceType();
 
         Collection<ChessMove> validMoves = new ArrayList<>();
-        switch(piece){
-        case BISHOP:
-        //up right
-            validMoves.addAll(UpRight(myPosition, row, col));
-        //up left
-            validMoves.addAll(UpLeft(myPosition, row, col));
-        //up right
-            validMoves.addAll(BottomRight(myPosition, row, col));
-        //bottom left
-            validMoves.addAll(BottomLeft(myPosition, row, col));
+        switch(myPieceType){
+            case BISHOP:
+            //up right
+                validMoves.addAll(UpRight(myPosition, row, col, board, myPieceColor));
+            //up left
+                validMoves.addAll(UpLeft(myPosition, row, col, board, myPieceColor));
+            //up right
+                validMoves.addAll(BottomRight(myPosition, row, col, board, myPieceColor));
+            //bottom left
+                validMoves.addAll(BottomLeft(myPosition, row, col, board, myPieceColor));
         }
-
         return validMoves;
     }
 
-    public Collection<ChessMove> UpRight(ChessPosition startposition, int row, int col){
+    public Collection<ChessMove> UpRight(ChessPosition startposition, int row, int col,
+                                         ChessBoard board, ChessGame.TeamColor TeamColor){
         Collection<ChessMove> moves = new ArrayList<>();
+        //check to make sure we are in the board
         while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
             row += 1;
             col += 1;
-            ChessPosition finalPosition = new ChessPosition(row, col);
-            ChessMove chessmove = new ChessMove(startposition, finalPosition, null);
-            moves.add(chessmove);
+            ChessPosition newPosition = new ChessPosition(row, col);
+            ChessPiece newPiece = board.getPiece(newPosition);
+            moves = AddToMoves(newPiece, TeamColor, row, col, startposition, moves, newPosition);
+            if (newPiece != null){
+                break;
+            }
+        }
+        return moves;
+    }
+    public Collection<ChessMove> UpLeft(ChessPosition startposition, int row, int col,
+                                        ChessBoard board, ChessGame.TeamColor TeamColor){
+        Collection<ChessMove> moves = new ArrayList<>();
+        while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
+            row -= 1;
+            col += 1;
+            ChessPosition newPosition = new ChessPosition(row, col);
+            ChessPiece newPiece = board.getPiece(newPosition);
+            moves = AddToMoves(newPiece, TeamColor, row, col, startposition, moves, newPosition);
+            if (newPiece != null){
+                break;
+            }
         }
         return moves;
     }
 
-    public Collection<ChessMove> UpLeft(ChessPosition startposition, int row, int col){
-        Collection<ChessMove> moves = new ArrayList<>();
-        while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
-            row -= 1;
-            col += 1;
-            ChessPosition finalPosition = new ChessPosition(row, col);
-            ChessMove chessmove = new ChessMove(startposition, finalPosition, null);
-            moves.add(chessmove);
-        }
-        return moves;
-    }
-    public Collection<ChessMove> BottomRight(ChessPosition startposition, int row, int col){
+    public Collection<ChessMove> BottomRight(ChessPosition startposition, int row, int col,
+                                             ChessBoard board, ChessGame.TeamColor TeamColor){
         Collection<ChessMove> moves = new ArrayList<>();
         while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
             row += 1;
             col -= 1;
-            ChessPosition finalPosition = new ChessPosition(row, col);
-            ChessMove chessmove = new ChessMove(startposition, finalPosition, null);
-            moves.add(chessmove);
+            ChessPosition newPosition = new ChessPosition(row, col);
+            ChessPiece newPiece = board.getPiece(newPosition);
+            moves = AddToMoves(newPiece, TeamColor, row, col, startposition, moves, newPosition);
+            if (newPiece != null){
+                break;
+            }
         }
         return moves;
     }
-    public Collection<ChessMove> BottomLeft(ChessPosition startposition, int row, int col){
+    public Collection<ChessMove> BottomLeft(ChessPosition startposition, int row, int col,
+                                            ChessBoard board, ChessGame.TeamColor TeamColor){
         Collection<ChessMove> moves = new ArrayList<>();
         while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
             row -= 1;
             col -= 1;
-            ChessPosition finalPosition = new ChessPosition(row, col);
-            ChessMove chessmove = new ChessMove(startposition, finalPosition, null);
-            moves.add(chessmove);
+            ChessPosition newPosition = new ChessPosition(row, col);
+            ChessPiece newPiece = board.getPiece(newPosition);
+                moves = AddToMoves(newPiece, TeamColor, row, col, startposition, moves, newPosition);
+                if (newPiece != null) {
+                    break;
+                }
         }
+        return moves;
+    }
+
+    public Collection<ChessMove> AddToMoves(ChessPiece newPiece, ChessGame.TeamColor TeamColor, int row,
+                                            int col, ChessPosition startposition, Collection<ChessMove> moves, ChessPosition newPosition){
+        //check if there is a piece on the square or not (null)
+        if (newPiece != null){
+            ChessGame.TeamColor newPieceColor = newPiece.getTeamColor();
+            //if piece, check if color is same or opposite
+            if (TeamColor != newPieceColor){
+                ChessPosition finalPosition = new ChessPosition(row, col);
+                moves = FinishMoves(startposition, finalPosition, moves);
+            }
+        }
+        else{
+            ChessPosition finalPosition = new ChessPosition(row, col);
+            moves = FinishMoves(startposition, finalPosition, moves);
+        }
+        return moves;
+    }
+
+    // Create chessmove and add to moves
+    public Collection<ChessMove> FinishMoves(ChessPosition startPosition, ChessPosition finalPosition, Collection<ChessMove> moves){
+        ChessMove chessmove = new ChessMove(startPosition, finalPosition, null);
+        moves.add(chessmove);
         return moves;
     }
 
