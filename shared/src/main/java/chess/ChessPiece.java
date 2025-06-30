@@ -11,11 +11,11 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPiece {
-private ChessGame.TeamColor pieceColor;
+private ChessGame.TeamColor TeamColor;
 private ChessPiece.PieceType type;
 
-    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
-        this.pieceColor = pieceColor;
+    public ChessPiece(ChessGame.TeamColor TeamColor, ChessPiece.PieceType type) {
+        this.TeamColor = TeamColor;
         this.type = type;
     }
 
@@ -35,7 +35,7 @@ private ChessPiece.PieceType type;
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        return pieceColor;
+        return TeamColor;
     }
 
     /**
@@ -62,106 +62,18 @@ private ChessPiece.PieceType type;
         ChessPiece.PieceType myPieceType = board.getPiece(myPosition).getPieceType();
 
         Collection<ChessMove> validMoves = new ArrayList<>();
+        //get pieceMoves for each type of piece
         switch(myPieceType){
             case BISHOP:
-            //up right
-                validMoves.addAll(UpRight(myPosition, row, col, board, myPieceColor));
-            //up left
-                validMoves.addAll(UpLeft(myPosition, row, col, board, myPieceColor));
-            //up right
-                validMoves.addAll(BottomRight(myPosition, row, col, board, myPieceColor));
-            //bottom left
-                validMoves.addAll(BottomLeft(myPosition, row, col, board, myPieceColor));
+                BishopMovesCalculator Bishop = new BishopMovesCalculator(myPieceColor, myPieceType);
+                validMoves = Bishop.pieceMoves(board, myPosition);
+                break;
+            case KING:
+                KingMovesCalculator King = new KingMovesCalculator(myPieceColor, myPieceType);
+                validMoves = King.pieceMoves(board, myPosition);
+                break;
         }
         return validMoves;
-    }
-
-    public Collection<ChessMove> UpRight(ChessPosition startposition, int row, int col,
-                                         ChessBoard board, ChessGame.TeamColor TeamColor){
-        Collection<ChessMove> moves = new ArrayList<>();
-        //check to make sure we are in the board
-        while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
-            row += 1;
-            col += 1;
-            ChessPosition newPosition = new ChessPosition(row, col);
-            ChessPiece newPiece = board.getPiece(newPosition);
-            moves = AddToMoves(newPiece, TeamColor, row, col, startposition, moves, newPosition);
-            if (newPiece != null){
-                break;
-            }
-        }
-        return moves;
-    }
-    public Collection<ChessMove> UpLeft(ChessPosition startposition, int row, int col,
-                                        ChessBoard board, ChessGame.TeamColor TeamColor){
-        Collection<ChessMove> moves = new ArrayList<>();
-        while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
-            row -= 1;
-            col += 1;
-            ChessPosition newPosition = new ChessPosition(row, col);
-            ChessPiece newPiece = board.getPiece(newPosition);
-            moves = AddToMoves(newPiece, TeamColor, row, col, startposition, moves, newPosition);
-            if (newPiece != null){
-                break;
-            }
-        }
-        return moves;
-    }
-
-    public Collection<ChessMove> BottomRight(ChessPosition startposition, int row, int col,
-                                             ChessBoard board, ChessGame.TeamColor TeamColor){
-        Collection<ChessMove> moves = new ArrayList<>();
-        while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
-            row += 1;
-            col -= 1;
-            ChessPosition newPosition = new ChessPosition(row, col);
-            ChessPiece newPiece = board.getPiece(newPosition);
-            moves = AddToMoves(newPiece, TeamColor, row, col, startposition, moves, newPosition);
-            if (newPiece != null){
-                break;
-            }
-        }
-        return moves;
-    }
-    public Collection<ChessMove> BottomLeft(ChessPosition startposition, int row, int col,
-                                            ChessBoard board, ChessGame.TeamColor TeamColor){
-        Collection<ChessMove> moves = new ArrayList<>();
-        while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
-            row -= 1;
-            col -= 1;
-            ChessPosition newPosition = new ChessPosition(row, col);
-            ChessPiece newPiece = board.getPiece(newPosition);
-                moves = AddToMoves(newPiece, TeamColor, row, col, startposition, moves, newPosition);
-                if (newPiece != null) {
-                    break;
-                }
-        }
-        return moves;
-    }
-
-    public Collection<ChessMove> AddToMoves(ChessPiece newPiece, ChessGame.TeamColor TeamColor, int row,
-                                            int col, ChessPosition startposition, Collection<ChessMove> moves, ChessPosition newPosition){
-        //check if there is a piece on the square or not (null)
-        if (newPiece != null){
-            ChessGame.TeamColor newPieceColor = newPiece.getTeamColor();
-            //if piece, check if color is same or opposite
-            if (TeamColor != newPieceColor){
-                ChessPosition finalPosition = new ChessPosition(row, col);
-                moves = FinishMoves(startposition, finalPosition, moves);
-            }
-        }
-        else{
-            ChessPosition finalPosition = new ChessPosition(row, col);
-            moves = FinishMoves(startposition, finalPosition, moves);
-        }
-        return moves;
-    }
-
-    // Create chessmove and add to moves
-    public Collection<ChessMove> FinishMoves(ChessPosition startPosition, ChessPosition finalPosition, Collection<ChessMove> moves){
-        ChessMove chessmove = new ChessMove(startPosition, finalPosition, null);
-        moves.add(chessmove);
-        return moves;
     }
 
     @Override
@@ -170,16 +82,16 @@ private ChessPiece.PieceType type;
             return false;
         }
         ChessPiece that = (ChessPiece) o;
-        return pieceColor == that.pieceColor && type == that.type;
+        return TeamColor == that.TeamColor && type == that.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pieceColor, type);
+        return Objects.hash(TeamColor, type);
     }
 
     public String toString(){
-        String string = String.format("Color = %s, type = %s", pieceColor, type);
+        String string = String.format("Color = %s, type = %s", TeamColor, type);
         return string;
     }
 }
