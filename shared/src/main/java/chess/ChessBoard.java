@@ -12,7 +12,7 @@ import java.util.Objects;
 public class ChessBoard {
     //changed to ChessPiece[9][9] to make sure array does not get out of range
     //used to be new ChessPiece[8][8]
-    private ChessPiece[][] squares = new ChessPiece[9][9];
+    private ChessPiece[][] squares = new ChessPiece[8][8];
     public ChessBoard() {
         
     }
@@ -38,7 +38,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        squares[position.getRow()][position.getColumn()] = piece;
+        squares[position.getRow() - 1][position.getColumn() - 1] = piece;
     }
 
     /**
@@ -50,6 +50,7 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         return squares[position.getRow()][position.getColumn()];
+        return squares[position.getRow() - 1][position.getColumn() - 1];
     }
 
     /**
