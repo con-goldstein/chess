@@ -4,34 +4,30 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class BishopMovesCalculator implements PieceMovesCalculator {
-    private ChessGame.TeamColor TeamColor;
-    private ChessPiece.PieceType type;
+
     public BishopMovesCalculator(ChessGame.TeamColor TeamColor, ChessPiece.PieceType type) {
-        this.TeamColor = TeamColor;
-        this.type = type;
     }
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         // get row and col where piece is
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-
         // get piece type & color
         ChessGame.TeamColor myPieceColor = board.getPiece(myPosition).getTeamColor();
-
         Collection<ChessMove> validMoves = new ArrayList<>();
+
         //up right
-        validMoves.addAll(UpRight(myPosition, row, col, board, myPieceColor));
+        UpRight(myPosition, row, col, board, myPieceColor, validMoves);
         //up left
-        validMoves.addAll(UpLeft(myPosition, row, col, board, myPieceColor));
+        UpLeft(myPosition, row, col, board, myPieceColor, validMoves);
         //up right
-        validMoves.addAll(BottomRight(myPosition, row, col, board, myPieceColor));
+        BottomRight(myPosition, row, col, board, myPieceColor,validMoves);
         //bottom left
-        validMoves.addAll(BottomLeft(myPosition, row, col, board, myPieceColor));
+        BottomLeft(myPosition, row, col, board, myPieceColor, validMoves);
         return validMoves;
     }
-    public Collection<ChessMove> UpRight(ChessPosition startposition, int row, int col,
-                                         ChessBoard board, ChessGame.TeamColor TeamColor){
+    public void UpRight(ChessPosition startposition, int row, int col,
+                                         ChessBoard board, ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         //check to make sure we are in the board
         while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
@@ -44,10 +40,11 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
                 break;
             }
         }
-        return moves;
+        validMoves.addAll(moves);
     }
-    public Collection<ChessMove> UpLeft(ChessPosition startposition, int row, int col,
-                                        ChessBoard board, ChessGame.TeamColor TeamColor){
+
+    public void UpLeft(ChessPosition startposition, int row, int col,
+                        ChessBoard board, ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
             row -= 1;
@@ -59,11 +56,11 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
                 break;
             }
         }
-        return moves;
+        validMoves.addAll(moves);
     }
 
-    public Collection<ChessMove> BottomRight(ChessPosition startposition, int row, int col,
-                                             ChessBoard board, ChessGame.TeamColor TeamColor){
+    public void BottomRight(ChessPosition startposition, int row, int col,
+                        ChessBoard board, ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
             row += 1;
@@ -75,10 +72,10 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
                 break;
             }
         }
-        return moves;
+        validMoves.addAll(moves);
     }
-    public Collection<ChessMove> BottomLeft(ChessPosition startposition, int row, int col,
-                                            ChessBoard board, ChessGame.TeamColor TeamColor){
+    public void BottomLeft(ChessPosition startposition, int row, int col,
+                        ChessBoard board, ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
             row -= 1;
@@ -90,6 +87,5 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
                 break;
             }
         }
-        return moves;
-    }
+    validMoves.addAll(moves);    }
 }
