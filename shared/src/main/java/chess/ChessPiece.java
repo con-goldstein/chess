@@ -72,6 +72,12 @@ private ChessPiece.PieceType type;
                 KingMovesCalculator King = new KingMovesCalculator(myPieceColor, myPieceType);
                 validMoves = King.pieceMoves(board, myPosition);
                 break;
+            case KNIGHT:
+                KnightMovesCalculator Knight = new KnightMovesCalculator(myPieceColor, myPieceType);
+                validMoves = Knight.pieceMoves(board, myPosition);
+            case PAWN:
+                PawnMovesCalculator Pawn = new PawnMovesCalculator(myPieceColor, myPieceType);
+                validMoves = Pawn.pieceMoves(board, myPosition);
         }
         return validMoves;
     }

@@ -34,84 +34,76 @@ public class KingMovesCalculator implements PieceMovesCalculator {
     public Collection<ChessMove> Up(ChessPosition startposition, int row, int col, ChessBoard board,
                                     ChessGame.TeamColor TeamColor){
         Collection<ChessMove> moves = new ArrayList<>();
-        if (col < 8 ){
+        if (col + 1 <= 8 ){
             col += 1;
         }
-        Collection<ChessMove> validMoves = AddToBoard(row, col, TeamColor, startposition, moves, board);
-        return validMoves;
+        return AddToBoard(row, col, TeamColor, startposition, moves, board);
     }
 
     public Collection<ChessMove> Down(ChessPosition startposition, int row, int col, ChessBoard board,
                                     ChessGame.TeamColor TeamColor){
         Collection<ChessMove> moves = new ArrayList<>();
-        if (col > 0 ){
+        if (col - 1 > 0 ){
             col -= 1;
         }
-        Collection<ChessMove> validMoves = AddToBoard(row, col, TeamColor, startposition, moves, board);
-        return validMoves;
+        return AddToBoard(row, col, TeamColor, startposition, moves, board);
     }
 
     public Collection<ChessMove> Left(ChessPosition startposition, int row, int col, ChessBoard board,
                                     ChessGame.TeamColor TeamColor){
         Collection<ChessMove> moves = new ArrayList<>();
-        if (row < 8 ){
+        if (row  + 1 < 8 ){
             row += 1;
         }
-        Collection<ChessMove> validMoves = AddToBoard(row, col, TeamColor, startposition, moves, board);
-        return validMoves;
+        return AddToBoard(row, col, TeamColor, startposition, moves, board);
         }
 
     public Collection<ChessMove> Right(ChessPosition startposition, int row, int col, ChessBoard board,
                                     ChessGame.TeamColor TeamColor){
         Collection<ChessMove> moves = new ArrayList<>();
-        if (row > 0 ){
+        if (row - 1 > 0 ){
             row -= 1;
         }
-        Collection<ChessMove> validMoves = AddToBoard(row, col, TeamColor, startposition, moves, board);
-        return validMoves;
+        return AddToBoard(row, col, TeamColor, startposition, moves, board);
     }
 
     public Collection<ChessMove> UpRight(ChessPosition startposition, int row, int col, ChessBoard board,
                                        ChessGame.TeamColor TeamColor){
         Collection<ChessMove> moves = new ArrayList<>();
-        if (row < 8 & col < 8 ){
+        if (row + 1 <= 8 & col + 1 <= 8 ){
             row += 1;
             col += 1;
         }
-        Collection<ChessMove> validMoves = AddToBoard(row, col, TeamColor, startposition, moves, board);
-        return validMoves;
+        return AddToBoard(row, col, TeamColor, startposition, moves, board);
     }
 
     public Collection<ChessMove> UpLeft(ChessPosition startposition, int row, int col, ChessBoard board,
                                          ChessGame.TeamColor TeamColor){
         Collection<ChessMove> moves = new ArrayList<>();
-        if (row < 8 & col > 0 ){
+        if (row + 1 <= 8 & col - 1 > 0 ){
             row += 1;
             col -= 1;
         }
-        Collection<ChessMove> validMoves = AddToBoard(row, col, TeamColor, startposition, moves, board);
-        return validMoves;
+        return AddToBoard(row, col, TeamColor, startposition, moves, board);
     }
 
     public Collection<ChessMove> DownRight(ChessPosition startposition, int row, int col, ChessBoard board,
                                          ChessGame.TeamColor TeamColor){
         Collection<ChessMove> moves = new ArrayList<>();
-        if (row > 0 & col < 8 ){
+        if (row - 1 > 0 & col + 1 <= 8 ){
             row -= 1;
             col += 1;
         }
-        Collection<ChessMove> validMoves = AddToBoard(row, col, TeamColor, startposition, moves, board);
-        return validMoves;
+        return AddToBoard(row, col, TeamColor, startposition, moves, board);
     }
 
     public Collection<ChessMove> DownLeft(ChessPosition startposition, int row, int col, ChessBoard board,
                                          ChessGame.TeamColor TeamColor){
         Collection<ChessMove> moves = new ArrayList<>();
-        if (row > 0 & col > 0 ){
+        if (row - 1 > 0 & col - 1 > 0 ){
             row -= 1;
             col -= 1;
         }
-        Collection<ChessMove> validMoves = AddToBoard(row, col, TeamColor, startposition, moves, board);
-        return validMoves;
+        return AddToBoard(row, col, TeamColor, startposition, moves, board);
     }
 }
