@@ -52,14 +52,11 @@ private ChessPiece.PieceType type;
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-    // get row and col where piece is
-        int row = myPosition.getRow();
-        int col = myPosition.getColumn();
 
-    // get piece type & color
-        ChessPiece myPiece = board.getPiece(myPosition);
+        // get piece type & color
         ChessGame.TeamColor myPieceColor = board.getPiece(myPosition).getTeamColor();
         ChessPiece.PieceType myPieceType = board.getPiece(myPosition).getPieceType();
+        ChessPiece piece = board.getPiece(myPosition);
 
         Collection<ChessMove> validMoves = new ArrayList<>();
         //get pieceMoves for each type of piece
@@ -75,10 +72,20 @@ private ChessPiece.PieceType type;
             case KNIGHT:
                 KnightMovesCalculator Knight = new KnightMovesCalculator(myPieceColor, myPieceType);
                 validMoves = Knight.pieceMoves(board, myPosition);
+                break;
             case PAWN:
                 PawnMovesCalculator Pawn = new PawnMovesCalculator(myPieceColor, myPieceType);
                 validMoves = Pawn.pieceMoves(board, myPosition);
-        }
+                break;
+            case QUEEN:
+                QueenMovesCalculator Queen = new QueenMovesCalculator(myPieceColor, myPieceType);
+                validMoves = Queen.pieceMoves(board, myPosition);
+                break;
+            case ROOK:
+                RookMovesCalculator Rook = new RookMovesCalculator(myPieceColor, myPieceType);
+                validMoves = Rook.pieceMoves(board, myPosition);
+                break;
+}
         return validMoves;
     }
 

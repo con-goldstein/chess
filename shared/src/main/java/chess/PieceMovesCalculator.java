@@ -21,12 +21,13 @@ default Collection<ChessMove> AddToBoard(int row, int col, ChessGame.TeamColor T
             ChessGame.TeamColor newPieceColor = newPiece.getTeamColor();
             //if piece, check if color is same or opposite
             if (TeamColor != newPieceColor) {
-                ChessPosition finalPosition = new ChessPosition(row, col);
-                moves = FinishMoves(startposition, finalPosition, moves);
+                //if piece is different color, capture it and move to newPosition
+                moves = FinishMoves(startposition, newPosition, moves);
             }
-        } else {
-            ChessPosition finalPosition = new ChessPosition(row, col);
-            moves = FinishMoves(startposition, finalPosition, moves);
+        }
+        else {
+            //There is no piece, move it up to newPosition
+            moves = FinishMoves(startposition, newPosition, moves);
         }
         return moves;
     }

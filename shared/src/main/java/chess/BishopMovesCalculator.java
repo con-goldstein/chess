@@ -42,13 +42,14 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
         }
         validMoves.addAll(moves);
     }
-
+//    default Collection<ChessMove> AddToBoard(int row, int col, ChessGame.TeamColor TeamColor, ChessPosition startposition,
+//                                             Collection<ChessMove> moves, ChessBoard board){
     public void UpLeft(ChessPosition startposition, int row, int col,
                         ChessBoard board, ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
-            row -= 1;
-            col += 1;
+            row += 1;
+            col -= 1;
             ChessPosition newPosition = new ChessPosition(row, col);
             ChessPiece newPiece = board.getPiece(newPosition);
             moves = AddToMoves(newPiece, TeamColor, row, col, startposition, moves, newPosition);
@@ -63,8 +64,8 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
                         ChessBoard board, ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         while ((row < 8 && col < 8) && (row > 1 && col > 1)) {
-            row += 1;
-            col -= 1;
+            row -= 1;
+            col += 1;
             ChessPosition newPosition = new ChessPosition(row, col);
             ChessPiece newPiece = board.getPiece(newPosition);
             moves = AddToMoves(newPiece, TeamColor, row, col, startposition, moves, newPosition);

@@ -59,8 +59,7 @@ public class ChessMove {
     }
 
     public String toString(){
-        String string = String.format("Start Position = %s, End Position = %s",
-                startPosition.toString(), endPosition.toString());
+        String string = String.format("Start Position = %s, End Position = %s",  startPosition.toString(), endPosition.toString());
         if (promotionPiece != null) {
             string += String.format(" (promotes to %s)", promotionPiece);
         }

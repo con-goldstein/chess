@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -30,6 +31,7 @@ public class ChessGame {
     public void setTeamTurn(TeamColor team) {
         throw new RuntimeException("Not implemented");
     }
+
 
     /**
      * Enum identifying the 2 possible teams in a chess game
