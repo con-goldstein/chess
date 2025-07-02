@@ -5,7 +5,7 @@ import java.util.Collection;
 
 public class QueenMovesCalculator implements PieceMovesCalculator {
 
-    public QueenMovesCalculator(ChessGame.TeamColor TeamColor, ChessPiece.PieceType type) {
+    public QueenMovesCalculator() {
     }
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         // get row and col where piece is

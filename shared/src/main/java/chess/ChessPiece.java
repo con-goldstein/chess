@@ -62,27 +62,27 @@ private ChessPiece.PieceType type;
         //get pieceMoves for each type of piece
         switch(myPieceType){
             case BISHOP:
-                BishopMovesCalculator Bishop = new BishopMovesCalculator(myPieceColor, myPieceType);
+                BishopMovesCalculator Bishop = new BishopMovesCalculator();
                 validMoves = Bishop.pieceMoves(board, myPosition);
                 break;
             case KING:
-                KingMovesCalculator King = new KingMovesCalculator(myPieceColor, myPieceType);
+                KingMovesCalculator King = new KingMovesCalculator();
                 validMoves = King.pieceMoves(board, myPosition);
                 break;
             case KNIGHT:
-                KnightMovesCalculator Knight = new KnightMovesCalculator(myPieceColor, myPieceType);
+                KnightMovesCalculator Knight = new KnightMovesCalculator();
                 validMoves = Knight.pieceMoves(board, myPosition);
                 break;
             case PAWN:
-                PawnMovesCalculator Pawn = new PawnMovesCalculator(myPieceColor, myPieceType);
+                PawnMovesCalculator Pawn = new PawnMovesCalculator();
                 validMoves = Pawn.pieceMoves(board, myPosition);
                 break;
             case QUEEN:
-                QueenMovesCalculator Queen = new QueenMovesCalculator(myPieceColor, myPieceType);
+                QueenMovesCalculator Queen = new QueenMovesCalculator();
                 validMoves = Queen.pieceMoves(board, myPosition);
                 break;
             case ROOK:
-                RookMovesCalculator Rook = new RookMovesCalculator(myPieceColor, myPieceType);
+                RookMovesCalculator Rook = new RookMovesCalculator();
                 validMoves = Rook.pieceMoves(board, myPosition);
                 break;
 }

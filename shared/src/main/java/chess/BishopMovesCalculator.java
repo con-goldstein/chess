@@ -5,8 +5,7 @@ import java.util.Collection;
 
 public class BishopMovesCalculator implements PieceMovesCalculator {
 
-    public BishopMovesCalculator(ChessGame.TeamColor TeamColor, ChessPiece.PieceType type) {
-    }
+    public BishopMovesCalculator() {}
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         // get row and col where piece is

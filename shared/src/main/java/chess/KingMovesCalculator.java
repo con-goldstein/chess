@@ -5,12 +5,9 @@ import java.util.Collection;
 
 
 public class KingMovesCalculator implements PieceMovesCalculator {
-    private ChessGame.TeamColor TeamColor;
-    private ChessPiece.PieceType type;
 
-    public KingMovesCalculator(ChessGame.TeamColor TeamColor, ChessPiece.PieceType type) {
-        this.TeamColor = TeamColor;
-        this.type = type;
+    public KingMovesCalculator() {
+
     }
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition){

@@ -6,12 +6,8 @@ import java.util.Collection;
 import static chess.ChessPiece.PieceType.*;
 
 public class PawnMovesCalculator implements PieceMovesCalculator{
-    private ChessGame.TeamColor TeamColor;
-    private ChessPiece.PieceType type;
-    public PawnMovesCalculator(ChessGame.TeamColor TeamColor, ChessPiece.PieceType type) {
-        this.TeamColor = TeamColor;
-        this.type = type;
-    }
+
+    public PawnMovesCalculator() {}
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition){
         int row = myPosition.getRow();
