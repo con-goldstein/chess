@@ -54,8 +54,8 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             for (int c : captureCols) {
                 if (OnBoard(captureRow, c)) {
                     ChessPosition newPos = new ChessPosition(captureRow, c);
-                    ChessPiece target = board.getPiece(newPos);
-                    if (target != null && target.getTeamColor() == ChessGame.TeamColor.BLACK) {
+                    ChessPiece newPiece = board.getPiece(newPos);
+                    if (newPiece != null && newPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
                         addCaptureMove(myposition, newPos, moves);
                     }
                 }
@@ -87,8 +87,8 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             for (int c : captureCols) {
                 if (OnBoard(captureRow, c)) {
                     ChessPosition newPos = new ChessPosition(captureRow, c);
-                    ChessPiece target = board.getPiece(newPos);
-                    if (target != null && target.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                    ChessPiece newPiece = board.getPiece(newPos);
+                    if (newPiece != null && newPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
                         addCaptureMove(myposition, newPos, moves);
                     }
                 }
