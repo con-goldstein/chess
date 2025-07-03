@@ -54,9 +54,7 @@ private ChessPiece.PieceType type;
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
 
         // get piece type & color
-        ChessGame.TeamColor myPieceColor = board.getPiece(myPosition).getTeamColor();
         ChessPiece.PieceType myPieceType = board.getPiece(myPosition).getPieceType();
-        ChessPiece piece = board.getPiece(myPosition);
 
         Collection<ChessMove> validMoves = new ArrayList<>();
         //get pieceMoves for each type of piece
