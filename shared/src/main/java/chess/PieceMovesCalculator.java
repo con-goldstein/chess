@@ -1,10 +1,19 @@
 package chess;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 
 interface PieceMovesCalculator {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition);
 
+default Collection<ChessMove> AddToBoard(int row, int col, ChessGame.TeamColor TeamColor, ChessPosition startposition,
+                        Collection<ChessMove> moves, ChessBoard board){
+    ChessPosition newPosition = new ChessPosition(row, col);
+    ChessPiece newPiece = board.getPiece(newPosition);
+    moves = AddToMoves(newPiece, TeamColor, row, col, startposition, moves, newPosition);
+    return moves;
+}
 
     default Collection<ChessMove> AddToMoves(ChessPiece newPiece, ChessGame.TeamColor TeamColor, int row, int col,
                                              ChessPosition startposition, Collection<ChessMove> moves, ChessPosition newPosition) {
