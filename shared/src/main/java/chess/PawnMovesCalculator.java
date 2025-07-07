@@ -22,10 +22,10 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
     }
 
     public Collection<ChessMove> moveStartingPosition(ChessPosition myposition, int row, int col, ChessBoard board,
-                                                      ChessGame.TeamColor TeamColor) {
+                                                      ChessGame.TeamColor teamColor) {
         Collection<ChessMove> moves = new ArrayList<>();
 
-        if (TeamColor == ChessGame.TeamColor.WHITE) {
+        if (teamColor == ChessGame.TeamColor.WHITE) {
             // forward one or two spaces
             if (row == 2) {
                 if (board.getPiece(new ChessPosition(3, col)) == null) {
@@ -58,7 +58,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             }
         }
 
-        if (TeamColor == ChessGame.TeamColor.BLACK) {
+        if (teamColor == ChessGame.TeamColor.BLACK) {
             // forward one or two spaces
             if (row == 7) {
                 if (board.getPiece(new ChessPosition(6, col)) == null){
@@ -95,19 +95,19 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
     }
 
     public Collection<ChessMove> pawnAddBoard(int row, int col, ChessPosition startposition,
-                                              Collection<ChessMove> moves, ChessBoard board, ChessPiece.PieceType PromoPiece){
+                                              Collection<ChessMove> moves, ChessBoard board, ChessPiece.PieceType promoPiece){
         ChessPosition newPosition = new ChessPosition(row, col);
         ChessPiece newPiece = board.getPiece(newPosition);
         //if there is a piece already
         if (newPiece == null){
-            moves = finishMoves(startposition, newPosition, moves, PromoPiece);
+            moves = finishMoves(startposition, newPosition, moves, promoPiece);
         }
         return moves;
     }
 
     public Collection<ChessMove> finishMoves(ChessPosition startPosition, ChessPosition finalPosition, Collection<ChessMove> moves,
-                                             ChessPiece.PieceType PromoPiece){
-        ChessMove chessmove = new ChessMove(startPosition, finalPosition, PromoPiece);
+                                             ChessPiece.PieceType promoPiece){
+        ChessMove chessmove = new ChessMove(startPosition, finalPosition, promoPiece);
         moves.add(chessmove);
         return moves;
     }

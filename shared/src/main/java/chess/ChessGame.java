@@ -11,11 +11,11 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessGame {
-    private TeamColor TeamColor;
+    private TeamColor teamColor;
     private ChessBoard chessBoard;
 
     public ChessGame() {
-        this.TeamColor = TeamColor.WHITE;
+        this.teamColor = teamColor.WHITE;
         this.chessBoard = new ChessBoard();
         chessBoard.resetBoard();
     }
@@ -24,7 +24,7 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        return TeamColor;
+        return teamColor;
     }
 
     /**
@@ -33,7 +33,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        TeamColor = team;
+        teamColor = team;
     }
 
 
@@ -93,7 +93,7 @@ public class ChessGame {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
         ChessPiece piece = chessBoard.getPiece(startPosition);
-        ChessPiece.PieceType PromoPiece = move.getPromotionPiece();
+        ChessPiece.PieceType promotionPiece = move.getPromotionPiece();
         TeamColor currentTeam = getTeamTurn();
         int row = endPosition.getRow();
 
@@ -111,13 +111,13 @@ public class ChessGame {
                     //if piece is a pawn
                     else {
 //                  if pawn is white and at end of board, change to promotion piece
-                        if (currentTeam == TeamColor.WHITE && row == 8) {
-                            ChessPiece promoPiece = new ChessPiece(currentTeam, PromoPiece);
+                        if (currentTeam == teamColor.WHITE && row == 8) {
+                            ChessPiece promoPiece = new ChessPiece(currentTeam, promotionPiece);
                             chessBoard.addPiece(endPosition, promoPiece);
                         }
                         //if pawn is black and at end of board, change to promotion piece
-                        else if (currentTeam == TeamColor.BLACK && row == 1) {
-                            ChessPiece promoPiece = new ChessPiece(currentTeam, PromoPiece);
+                        else if (currentTeam == teamColor.BLACK && row == 1) {
+                            ChessPiece promoPiece = new ChessPiece(currentTeam, promotionPiece);
                             chessBoard.addPiece(endPosition, promoPiece);
                         } else {
                             chessBoard.addPiece(endPosition, piece);
@@ -131,10 +131,10 @@ public class ChessGame {
 //                    boolean stalemate = isInStalemate(currentTeam);
 
                         //change team color
-                    if (currentTeam == TeamColor.WHITE) {
-                        setTeamTurn(TeamColor.BLACK);
+                    if (currentTeam == teamColor.WHITE) {
+                        setTeamTurn(teamColor.BLACK);
                     } else {
-                        setTeamTurn((TeamColor.WHITE));
+                        setTeamTurn((teamColor.WHITE));
                     }
                 } else {
                     throw new InvalidMoveException("Invalid move");
@@ -284,12 +284,12 @@ public class ChessGame {
             return false;
         }
         ChessGame chessGame = (ChessGame) o;
-        return TeamColor == chessGame.TeamColor && Objects.equals(chessBoard, chessGame.chessBoard);
+        return teamColor == chessGame.teamColor && Objects.equals(chessBoard, chessGame.chessBoard);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(TeamColor, chessBoard);
+        return Objects.hash(teamColor, chessBoard);
     }
     //comment
 }

@@ -11,11 +11,11 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPiece {
-private ChessGame.TeamColor TeamColor;
+private ChessGame.TeamColor teamColor;
 private ChessPiece.PieceType type;
 
     public ChessPiece(ChessGame.TeamColor TeamColor, ChessPiece.PieceType type) {
-        this.TeamColor = TeamColor;
+        this.teamColor = TeamColor;
         this.type = type;
     }
 
@@ -35,7 +35,7 @@ private ChessPiece.PieceType type;
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        return TeamColor;
+        return teamColor;
     }
 
     /**
@@ -60,28 +60,28 @@ private ChessPiece.PieceType type;
         //get pieceMoves for each type of piece
         switch(myPieceType){
             case BISHOP:
-                BishopMovesCalculator Bishop = new BishopMovesCalculator();
-                validMoves = Bishop.pieceMoves(board, myPosition);
+                BishopMovesCalculator bishop = new BishopMovesCalculator();
+                validMoves = bishop.pieceMoves(board, myPosition);
                 break;
             case KING:
-                KingMovesCalculator King = new KingMovesCalculator();
-                validMoves = King.pieceMoves(board, myPosition);
+                KingMovesCalculator king = new KingMovesCalculator();
+                validMoves = king.pieceMoves(board, myPosition);
                 break;
             case KNIGHT:
-                KnightMovesCalculator Knight = new KnightMovesCalculator();
-                validMoves = Knight.pieceMoves(board, myPosition);
+                KnightMovesCalculator knight = new KnightMovesCalculator();
+                validMoves = knight.pieceMoves(board, myPosition);
                 break;
             case PAWN:
-                PawnMovesCalculator Pawn = new PawnMovesCalculator();
-                validMoves = Pawn.pieceMoves(board, myPosition);
+                PawnMovesCalculator pawn = new PawnMovesCalculator();
+                validMoves = pawn.pieceMoves(board, myPosition);
                 break;
             case QUEEN:
-                QueenMovesCalculator Queen = new QueenMovesCalculator();
-                validMoves = Queen.pieceMoves(board, myPosition);
+                QueenMovesCalculator queen = new QueenMovesCalculator();
+                validMoves = queen.pieceMoves(board, myPosition);
                 break;
             case ROOK:
-                RookMovesCalculator Rook = new RookMovesCalculator();
-                validMoves = Rook.pieceMoves(board, myPosition);
+                RookMovesCalculator rook = new RookMovesCalculator();
+                validMoves = rook.pieceMoves(board, myPosition);
                 break;
 }
         return validMoves;
@@ -93,16 +93,16 @@ private ChessPiece.PieceType type;
             return false;
         }
         ChessPiece that = (ChessPiece) o;
-        return TeamColor == that.TeamColor && type == that.type;
+        return teamColor == that.teamColor && type == that.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(TeamColor, type);
+        return Objects.hash(teamColor, type);
     }
 
     public String toString(){
-        String string = String.format("Color = %s, type = %s", TeamColor, type);
+        String string = String.format("Color = %s, type = %s", teamColor, type);
         return string;
     }
 }

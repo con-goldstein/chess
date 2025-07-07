@@ -5,11 +5,11 @@ import java.util.Collection;
 interface PieceMovesCalculator {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition);
 
-default Collection<ChessMove> addToBoard(int row, int col, ChessGame.TeamColor TeamColor, ChessPosition startposition,
+default Collection<ChessMove> addToBoard(int row, int col, ChessGame.TeamColor teamColor, ChessPosition startposition,
                                          Collection<ChessMove> moves, ChessBoard board){
     ChessPosition newPosition = new ChessPosition(row, col);
     ChessPiece newPiece = board.getPiece(newPosition);
-    moves = addToMoves(newPiece, TeamColor, row, col, startposition, moves, newPosition);
+    moves = addToMoves(newPiece, teamColor, row, col, startposition, moves, newPosition);
     return moves;
 }
 
