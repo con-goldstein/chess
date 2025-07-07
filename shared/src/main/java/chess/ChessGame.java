@@ -291,6 +291,7 @@ public class ChessGame {
     public int hashCode() {
         return Objects.hash(TeamColor, chessBoard);
     }
+    //comment
 }
 
 
