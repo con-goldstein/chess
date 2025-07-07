@@ -77,9 +77,7 @@ public class ChessGame {
                 toRemove.add(move);
                 this.chessBoard = originalBoard;
             }
-            else{
                 this.chessBoard = originalBoard;
-            }
         }
         moves.removeAll(toRemove);
         return moves;
@@ -286,12 +284,12 @@ public class ChessGame {
             return false;
         }
         ChessGame chessGame = (ChessGame) o;
-        return TeamColor == chessGame.TeamColor;
+        return TeamColor == chessGame.TeamColor && Objects.equals(chessBoard, chessGame.chessBoard);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(TeamColor);
+        return Objects.hash(TeamColor, chessBoard);
     }
 }
 
