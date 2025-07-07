@@ -3,8 +3,6 @@ package chess;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static chess.ChessGame.TeamColor.WHITE;
-
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -75,6 +73,7 @@ public class ChessBoard {
         squares[7][7] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
 
     }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -108,6 +107,18 @@ public class ChessBoard {
     }
 
 
+    public ChessBoard copy(){
+        ChessBoard newBoard = new ChessBoard();
+        for (int i=0; i < 8; i++){
+            for (int j=0; j < 8; j++){
+                if (squares[i][j] != null){
+                    newBoard.squares[i][j] = squares[i][j];
+                }
+            }
+        }
+        return newBoard;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
@@ -121,4 +132,5 @@ public class ChessBoard {
     public int hashCode() {
         return Arrays.deepHashCode(squares);
     }
+
 }
