@@ -53,9 +53,9 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece chessPiece = chessBoard.getPiece(startPosition);
-        ChessGame.TeamColor TeamColor = chessPiece.getTeamColor();
+        Collection<ChessMove> toRemove = new ArrayList<>();
         if (chessPiece == null){
-            return null;
+            return toRemove;
         }
             Collection<ChessMove> moves = chessPiece.pieceMoves(chessBoard, startPosition);
             Collection<ChessMove> toRemove = new ArrayList<>();
