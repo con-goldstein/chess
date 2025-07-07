@@ -125,7 +125,12 @@ public class ChessGame {
                     }
                     //change original position to null
                     chessBoard.addPiece(startPosition, null);
-                    //change team color
+//
+//                    //check for checkmate/stalemate
+//                    boolean checkmate = isInCheckmate(currentTeam);
+//                    boolean stalemate = isInStalemate(currentTeam);
+
+                        //change team color
                     if (currentTeam == TeamColor.WHITE) {
                         setTeamTurn(TeamColor.BLACK);
                     } else {
@@ -149,35 +154,11 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        ChessPosition kingPos = null;
-        //find king and it's valid moves
-        for (int i=1; i<=8; i++){
-            for (int j=1; j<=8; j++) {
-                ChessPiece piece = chessBoard.getPiece(new ChessPosition(i, j));
-                if (piece != null) {
-                if (chessBoard.getPiece(new ChessPosition(i, j)).getPieceType() == ChessPiece.PieceType.KING) {
-                    ChessPosition pos = new ChessPosition(i, j);
-                    ChessPiece king = chessBoard.getPiece(pos);
-                    if (king.getTeamColor() == teamColor) {
-                        kingPos = pos;
-                    }
-                }
-            }
-            }
-        }
-        Collection<ChessMove> allValidMoves = new ArrayList<>();
-        // loop through every piece on the board
-        for (int i=1; i<=8; i++){
-            for (int j=1; j<=8; j++){
-                ChessPiece piece = chessBoard.getPiece(new ChessPosition(i, j));
-                // if we found a piece and it is opposite color
-                if (piece != null && piece.getTeamColor() != teamColor){
-                        //get piece moves
-                        Collection<ChessMove> pieceMoves = piece.pieceMoves(chessBoard, new ChessPosition(i,j));
-                        allValidMoves.addAll(pieceMoves);
-                }
-            }
-       }
+        //find king position
+        ChessPosition kingPos = findKingPos(teamColor);
+        //find all valid moves of opponent pieces
+        Collection<ChessMove> allValidMoves = findallValidMoves(teamColor);
+
         //check if king's position is in other team's moves
         ChessPosition finalKingPos = kingPos;
         return allValidMoves.stream().anyMatch(move -> move.getEndPosition().equals(finalKingPos));
@@ -220,6 +201,44 @@ public class ChessGame {
     public ChessBoard getBoard() {
         return chessBoard;
     }
+
+    public ChessPosition findKingPos(TeamColor teamColor){
+        ChessPosition kingPos = null;
+        //find king and it's valid moves
+        for (int i=1; i<=8; i++){
+            for (int j=1; j<=8; j++) {
+                ChessPiece piece = chessBoard.getPiece(new ChessPosition(i, j));
+                if (piece != null) {
+                    if (chessBoard.getPiece(new ChessPosition(i, j)).getPieceType() == ChessPiece.PieceType.KING) {
+                        ChessPosition pos = new ChessPosition(i, j);
+                        ChessPiece king = chessBoard.getPiece(pos);
+                        if (king.getTeamColor() == teamColor) {
+                            kingPos = pos;
+                        }
+                    }
+                }
+            }
+        }
+        return kingPos;
+    }
+
+    public Collection<ChessMove> findallValidMoves(TeamColor teamColor){
+        Collection<ChessMove> allValidMoves = new ArrayList<>();
+        // loop through every piece on the board
+        for (int i=1; i<=8; i++){
+            for (int j=1; j<=8; j++){
+                ChessPiece piece = chessBoard.getPiece(new ChessPosition(i, j));
+                // if we found a piece and it is opposite color
+                if (piece != null && piece.getTeamColor() != teamColor){
+                    //get piece moves
+                    Collection<ChessMove> pieceMoves = piece.pieceMoves(chessBoard, new ChessPosition(i,j));
+                    allValidMoves.addAll(pieceMoves);
+                }
+            }
+        }
+        return allValidMoves;
+    }
+
 
     @Override
     public boolean equals(Object o) {
