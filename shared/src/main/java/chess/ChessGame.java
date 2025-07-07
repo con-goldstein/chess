@@ -58,7 +58,6 @@ public class ChessGame {
             return toRemove;
         }
             Collection<ChessMove> moves = chessPiece.pieceMoves(chessBoard, startPosition);
-            Collection<ChessMove> toRemove = new ArrayList<>();
             for (ChessMove move : moves){
                 ChessPosition endPosition = move.getEndPosition();
                 //make copy of board
@@ -66,10 +65,12 @@ public class ChessGame {
                 //make move
                 newBoard.addPiece(endPosition, chessPiece);
                 newBoard.addPiece(startPosition, null);
-                //check if king isInCheck(TeamColor)
-
+                //in check uses internal board (squares),
+                // so make temp variable to hold original board & switch with board copy
                 ChessBoard originalBoard = this.chessBoard;
                 this.chessBoard = newBoard;
+                ChessGame.TeamColor TeamColor = chessPiece.getTeamColor();
+                //check if king isInCheck(TeamColor)
                 if (isInCheck(TeamColor)){
                     toRemove.add(move);
                     this.chessBoard = originalBoard;
@@ -91,12 +92,54 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
+        ChessPiece piece = chessBoard.getPiece(startPosition);
         ChessPiece.PieceType PromoPiece = move.getPromotionPiece();
+        TeamColor currentTeam = getTeamTurn();
+        int row = endPosition.getRow();
 
         //get valid moves for piece at startPosition
-        Collection<ChessMove> validMoves = validMoves(startPosition);
-
-
+        try{
+            //check if there is a piece & if it is the correct turn
+            if (piece != null && currentTeam == piece.getTeamColor()) {
+                Collection<ChessMove> validMoves = validMoves(startPosition);
+                if (validMoves.stream().anyMatch(validMove -> validMove.getEndPosition().equals(endPosition))) {
+                    //make the move
+                    //if piece is not a pawn
+                    if (piece.getPieceType() != ChessPiece.PieceType.PAWN) {
+                        chessBoard.addPiece(endPosition, piece);
+                    }
+                    //if piece is a pawn
+                    else {
+//                  if pawn is white and at end of board, change to promotion piece
+                        if (currentTeam == TeamColor.WHITE && row == 8) {
+                            ChessPiece promoPiece = new ChessPiece(currentTeam, PromoPiece);
+                            chessBoard.addPiece(endPosition, promoPiece);
+                        }
+                        //if pawn is black and at end of board, change to promotion piece
+                        else if (currentTeam == TeamColor.BLACK && row == 1) {
+                            ChessPiece promoPiece = new ChessPiece(currentTeam, PromoPiece);
+                            chessBoard.addPiece(endPosition, promoPiece);
+                        } else {
+                            chessBoard.addPiece(endPosition, piece);
+                        }
+                    }
+                    //change original position to null
+                    chessBoard.addPiece(startPosition, null);
+                    //change team color
+                    if (currentTeam == TeamColor.WHITE) {
+                        setTeamTurn(TeamColor.BLACK);
+                    } else {
+                        setTeamTurn((TeamColor.WHITE));
+                    }
+                } else {
+                    throw new InvalidMoveException("Invalid move");
+                }
+            }
+            else {throw new InvalidMoveException(("Made move out of turn"));}
+        }
+        catch (InvalidMoveException e){
+            throw new InvalidMoveException("Invalid move");
+        }
     }
 
     /**
