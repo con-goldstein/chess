@@ -30,25 +30,25 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             if (row == 2) {
                 if (board.getPiece(new ChessPosition(3, col)) == null) {
                     if (board.getPiece(new ChessPosition(4, col)) == null) {
-                        moves = PawnAddBoard(4, col, myposition, moves, board, null);
+                        moves = pawnAddBoard(4, col, myposition, moves, board, null);
                     }
                 }
             }
             row += 1;
             if (row == 8) {
-                moves = PawnAddBoard(row, col, myposition, moves, board, QUEEN);
-                moves = PawnAddBoard(row, col, myposition, moves, board, BISHOP);
-                moves = PawnAddBoard(row, col, myposition, moves, board, ROOK);
-                moves = PawnAddBoard(row, col, myposition, moves, board, KNIGHT);
+                moves = pawnAddBoard(row, col, myposition, moves, board, QUEEN);
+                moves = pawnAddBoard(row, col, myposition, moves, board, BISHOP);
+                moves = pawnAddBoard(row, col, myposition, moves, board, ROOK);
+                moves = pawnAddBoard(row, col, myposition, moves, board, KNIGHT);
             } else {
-                moves = PawnAddBoard(row, col, myposition, moves, board, null);
+                moves = pawnAddBoard(row, col, myposition, moves, board, null);
             }
 
             // capture diagonally
             int captureRow = myposition.getRow() + 1;
             int[] captureCols = {col - 1, col + 1};
             for (int c : captureCols) {
-                if (OnBoard(captureRow, c)) {
+                if (onBoard(captureRow, c)) {
                     ChessPosition newPos = new ChessPosition(captureRow, c);
                     ChessPiece newPiece = board.getPiece(newPos);
                     if (newPiece != null && newPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
@@ -63,25 +63,25 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             if (row == 7) {
                 if (board.getPiece(new ChessPosition(6, col)) == null){
                     if (board.getPiece(new ChessPosition(5, col)) == null){
-                        moves = PawnAddBoard(5, col, myposition, moves, board, null);
+                        moves = pawnAddBoard(5, col, myposition, moves, board, null);
                     }
                 }
             }
             row -= 1;
             if (row == 1) {
-                moves = PawnAddBoard(row, col, myposition, moves, board, QUEEN);
-                moves = PawnAddBoard(row, col, myposition, moves, board, BISHOP);
-                moves = PawnAddBoard(row, col, myposition, moves, board, ROOK);
-                moves = PawnAddBoard(row, col, myposition, moves, board, KNIGHT);
+                moves = pawnAddBoard(row, col, myposition, moves, board, QUEEN);
+                moves = pawnAddBoard(row, col, myposition, moves, board, BISHOP);
+                moves = pawnAddBoard(row, col, myposition, moves, board, ROOK);
+                moves = pawnAddBoard(row, col, myposition, moves, board, KNIGHT);
             } else {
-                moves = PawnAddBoard(row, col, myposition, moves, board, null);
+                moves = pawnAddBoard(row, col, myposition, moves, board, null);
             }
 
             // capture diagonally
             int captureRow = myposition.getRow() - 1;
             int[] captureCols = {col - 1, col + 1};
             for (int c : captureCols) {
-                if (OnBoard(captureRow, c)) {
+                if (onBoard(captureRow, c)) {
                     ChessPosition newPos = new ChessPosition(captureRow, c);
                     ChessPiece newPiece = board.getPiece(newPos);
                     if (newPiece != null && newPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
@@ -94,25 +94,25 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
         return moves;
     }
 
-    public Collection<ChessMove> PawnAddBoard(int row, int col, ChessPosition startposition,
+    public Collection<ChessMove> pawnAddBoard(int row, int col, ChessPosition startposition,
                                               Collection<ChessMove> moves, ChessBoard board, ChessPiece.PieceType PromoPiece){
         ChessPosition newPosition = new ChessPosition(row, col);
         ChessPiece newPiece = board.getPiece(newPosition);
         //if there is a piece already
         if (newPiece == null){
-            moves = FinishMoves(startposition, newPosition, moves, PromoPiece);
+            moves = finishMoves(startposition, newPosition, moves, PromoPiece);
         }
         return moves;
     }
 
-    public Collection<ChessMove> FinishMoves(ChessPosition startPosition, ChessPosition finalPosition, Collection<ChessMove> moves,
+    public Collection<ChessMove> finishMoves(ChessPosition startPosition, ChessPosition finalPosition, Collection<ChessMove> moves,
                                              ChessPiece.PieceType PromoPiece){
         ChessMove chessmove = new ChessMove(startPosition, finalPosition, PromoPiece);
         moves.add(chessmove);
         return moves;
     }
 
-    public boolean OnBoard(int row, int col){
+    public boolean onBoard(int row, int col){
         if ((row >= 1) & (row <= 8) & (col >= 1) & (col <= 8)){
             return true;
         }

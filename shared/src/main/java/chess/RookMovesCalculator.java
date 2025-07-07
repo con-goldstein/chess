@@ -10,13 +10,13 @@ public class RookMovesCalculator implements PieceMovesCalculator{
         ChessGame.TeamColor TeamColor = board.getPiece(myPosition).getTeamColor();
         Collection<ChessMove> validMoves = new ArrayList<>();
         //up
-        Up(myPosition, row, col, board,TeamColor, validMoves);
+        up(myPosition, row, col, board,TeamColor, validMoves);
         //down
-        Down(myPosition, row, col, board,TeamColor, validMoves);
+        down(myPosition, row, col, board,TeamColor, validMoves);
         //left
-        Left(myPosition, row, col, board,TeamColor, validMoves);
+        left(myPosition, row, col, board,TeamColor, validMoves);
         //right
-        Right(myPosition, row, col, board,TeamColor, validMoves);
+        right(myPosition, row, col, board,TeamColor, validMoves);
         return validMoves;
     }
 }

@@ -12,13 +12,13 @@ public class BishopMovesCalculator implements PieceMovesCalculator {
         Collection<ChessMove> validMoves = new ArrayList<>();
 
         //up right
-        UpRight(myPosition, row, col, board, myPieceColor, validMoves);
+        upRight(myPosition, row, col, board, myPieceColor, validMoves);
         // up left
-        UpLeft(myPosition, row, col, board, myPieceColor, validMoves);
+        upLeft(myPosition, row, col, board, myPieceColor, validMoves);
         // down right
-        DownRight(myPosition, row, col, board, myPieceColor, validMoves);
+        downRight(myPosition, row, col, board, myPieceColor, validMoves);
         // down left
-        DownLeft(myPosition, row, col, board, myPieceColor, validMoves);
+        downLeft(myPosition, row, col, board, myPieceColor, validMoves);
         return validMoves;
     }
 }
