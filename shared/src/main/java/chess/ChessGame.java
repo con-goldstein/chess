@@ -52,35 +52,36 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+
         ChessPiece chessPiece = chessBoard.getPiece(startPosition);
         Collection<ChessMove> toRemove = new ArrayList<>();
         if (chessPiece == null){
             return toRemove;
         }
-            Collection<ChessMove> moves = chessPiece.pieceMoves(chessBoard, startPosition);
-            for (ChessMove move : moves){
-                ChessPosition endPosition = move.getEndPosition();
-                //make copy of board
-                ChessBoard newBoard = chessBoard.copy();
-                //make move
-                newBoard.addPiece(endPosition, chessPiece);
-                newBoard.addPiece(startPosition, null);
-                //in check uses internal board (squares),
-                // so make temp variable to hold original board & switch with board copy
-                ChessBoard originalBoard = this.chessBoard;
-                this.chessBoard = newBoard;
-                ChessGame.TeamColor TeamColor = chessPiece.getTeamColor();
-                //check if king isInCheck(TeamColor)
-                if (isInCheck(TeamColor)){
-                    toRemove.add(move);
-                    this.chessBoard = originalBoard;
-                }
-                else{
-                    this.chessBoard = originalBoard;
-                }
+        Collection<ChessMove> moves = chessPiece.pieceMoves(chessBoard, startPosition);
+        for (ChessMove move : moves){
+            ChessPosition endPosition = move.getEndPosition();
+            //make copy of board
+            ChessBoard newBoard = chessBoard.copy();
+            //make move
+            newBoard.addPiece(endPosition, chessPiece);
+            newBoard.addPiece(startPosition, null);
+            //in check uses internal board (squares),
+            // so make temp variable to hold original board & switch with board copy
+            ChessBoard originalBoard = this.chessBoard;
+            this.chessBoard = newBoard;
+            ChessGame.TeamColor TeamColor = chessPiece.getTeamColor();
+            //check if king isInCheck(TeamColor)
+            if (isInCheck(TeamColor)){
+                toRemove.add(move);
+                this.chessBoard = originalBoard;
             }
-            moves.removeAll(toRemove);
-            return moves;
+            else{
+                this.chessBoard = originalBoard;
+            }
+        }
+        moves.removeAll(toRemove);
+        return moves;
     }
 
     /**
@@ -159,9 +160,8 @@ public class ChessGame {
         //find all valid moves of opponent pieces
         Collection<ChessMove> allValidMoves = findallValidMoves(teamColor);
 
-        //check if king's position is in other team's moves
-        ChessPosition finalKingPos = kingPos;
-        return allValidMoves.stream().anyMatch(move -> move.getEndPosition().equals(finalKingPos));
+        //check if king's position is in endPosition of any piece
+        return allValidMoves.stream().anyMatch(move -> move.getEndPosition().equals(kingPos));
     }
 
     /**
