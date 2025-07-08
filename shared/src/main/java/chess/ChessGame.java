@@ -55,9 +55,9 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
 
         ChessPiece chessPiece = chessBoard.getPiece(startPosition);
-        Collection<ChessMove> toRemove = new ArrayList<>();
+        Collection<ChessMove> movesToRemove = new ArrayList<>();
         if (chessPiece == null){
-            return toRemove;
+            return movesToRemove;
         }
         Collection<ChessMove> moves = chessPiece.pieceMoves(chessBoard, startPosition);
         for (ChessMove move : moves){
@@ -74,12 +74,12 @@ public class ChessGame {
             ChessGame.TeamColor TeamColor = chessPiece.getTeamColor();
             //check if king isInCheck(TeamColor)
             if (isInCheck(TeamColor)){
-                toRemove.add(move);
+                movesToRemove.add(move);
                 this.chessBoard = originalBoard;
             }
                 this.chessBoard = originalBoard;
         }
-        moves.removeAll(toRemove);
+        moves.removeAll(movesToRemove);
         return moves;
     }
 
