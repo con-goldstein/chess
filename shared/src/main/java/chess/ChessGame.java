@@ -71,9 +71,9 @@ public class ChessGame {
             // so make temp variable to hold original board & switch with board copy
             ChessBoard originalBoard = this.chessBoard;
             this.chessBoard = newBoard;
-            ChessGame.TeamColor TeamColor = chessPiece.getTeamColor();
+            ChessGame.TeamColor teamColor = chessPiece.getTeamColor();
             //check if king isInCheck(TeamColor)
-            if (isInCheck(TeamColor)){
+            if (isInCheck(teamColor)){
                 movesToRemove.add(move);
                 this.chessBoard = originalBoard;
             }
