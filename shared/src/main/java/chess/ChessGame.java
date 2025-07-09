@@ -174,23 +174,7 @@ public class ChessGame {
         if (!isInCheck(teamColor)){
             return false;
         }
-        //loop through every position
-        for (int i=1; i <= 8; i++){
-            for (int j=1; j<=8; j++){
-                ChessPosition pos = new ChessPosition(i, j);
-                ChessPiece piece = chessBoard.getPiece(pos);
-                //if there is a piece of teamColor
-                if (piece != null && piece.getTeamColor() == teamColor){
-                    //if piece has any valid moves, can get out of check and are not in checkmate
-                    Collection<ChessMove> validMoves = validMoves(pos);
-                    if (!validMoves.isEmpty()){
-                        return false;
-                    }
-
-                }
-            }
-        }
-        return true;
+        return findCheckMate(teamColor);
     }
 
     /**
@@ -205,13 +189,16 @@ public class ChessGame {
         if (isInCheck(teamColor)){
             return false;
         }
+        return findCheckMate(teamColor);
+    }
+    public boolean findCheckMate(TeamColor currentColor){
         //loop through every position
         for (int i=1; i <= 8; i++){
             for (int j=1; j<=8; j++){
                 ChessPosition pos = new ChessPosition(i, j);
                 ChessPiece piece = chessBoard.getPiece(pos);
                 //if there is a piece of teamColor
-                if (piece != null && piece.getTeamColor() == teamColor){
+                if (piece != null && piece.getTeamColor() == currentColor){
                     //if piece has any valid moves, can get out of check and are not in checkmate
                     Collection<ChessMove> validMoves = validMoves(pos);
                     if (!validMoves.isEmpty()){
@@ -221,7 +208,8 @@ public class ChessGame {
                 }
             }
         }
-        return true;    }
+        return true;
+    }
 
     /**
      * Sets this game's chessboard with a given board

@@ -13,12 +13,12 @@ default Collection<ChessMove> addToBoard(int row, int col, ChessGame.TeamColor t
     return moves;
 }
 
-    default Collection<ChessMove> addToMoves(ChessPiece newPiece, ChessGame.TeamColor TeamColor, int row, int col,
+    default Collection<ChessMove> addToMoves(ChessPiece newPiece, ChessGame.TeamColor teamColor, int row, int col,
                                              ChessPosition startposition, Collection<ChessMove> moves, ChessPosition newPosition) {
         if (newPiece != null){
             ChessGame.TeamColor newPieceColor = newPiece.getTeamColor();
             //if piece != null, check if color is opposite
-            if (TeamColor != newPieceColor){
+            if (teamColor != newPieceColor){
                 moves = finishMoves(startposition, newPosition, moves);
             }
         }
@@ -35,13 +35,13 @@ default Collection<ChessMove> addToBoard(int row, int col, ChessGame.TeamColor t
         return moves;
     }
     default void up(ChessPosition myPosition, int row, int col, ChessBoard board,
-                    ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
+                    ChessGame.TeamColor teamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         while (row + 1 <= 8){
             row += 1;
             ChessPosition newPosition = new ChessPosition(row, col);
             ChessPiece newPiece = board.getPiece(newPosition);
-            moves = addToMoves(newPiece, TeamColor, row, col, myPosition, moves, newPosition);
+            moves = addToMoves(newPiece, teamColor, row, col, myPosition, moves, newPosition);
             if (newPiece != null){
                 break;
             }
@@ -49,13 +49,13 @@ default Collection<ChessMove> addToBoard(int row, int col, ChessGame.TeamColor t
         validMoves.addAll(moves);
     }
     default void down(ChessPosition myPosition, int row, int col, ChessBoard board,
-                      ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
+                      ChessGame.TeamColor teamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         while (row - 1 >= 1){
             row -= 1;
             ChessPosition newPosition = new ChessPosition(row, col);
             ChessPiece newPiece = board.getPiece(newPosition);
-            moves = addToMoves(newPiece, TeamColor, row, col, myPosition, moves, newPosition);
+            moves = addToMoves(newPiece, teamColor, row, col, myPosition, moves, newPosition);
             if (newPiece != null){
                 break;
             }
@@ -63,13 +63,13 @@ default Collection<ChessMove> addToBoard(int row, int col, ChessGame.TeamColor t
         validMoves.addAll(moves);
     }
     default void left(ChessPosition myPosition, int row, int col, ChessBoard board,
-                      ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
+                      ChessGame.TeamColor teamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         while (col - 1 >= 1){
             col -= 1;
             ChessPosition newPosition = new ChessPosition(row, col);
             ChessPiece newPiece = board.getPiece(newPosition);
-            moves = addToMoves(newPiece, TeamColor, row, col, myPosition, moves, newPosition);
+            moves = addToMoves(newPiece, teamColor, row, col, myPosition, moves, newPosition);
             if (newPiece != null){
                 break;
             }
@@ -77,13 +77,13 @@ default Collection<ChessMove> addToBoard(int row, int col, ChessGame.TeamColor t
         validMoves.addAll(moves);
     }
     default void right(ChessPosition myPosition, int row, int col, ChessBoard board,
-                       ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
+                       ChessGame.TeamColor teamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         while (col + 1 <= 8){
             col += 1;
             ChessPosition newPosition = new ChessPosition(row, col);
             ChessPiece newPiece = board.getPiece(newPosition);
-            moves = addToMoves(newPiece, TeamColor, row, col, myPosition, moves, newPosition);
+            moves = addToMoves(newPiece, teamColor, row, col, myPosition, moves, newPosition);
             if (newPiece != null){
                 break;
             }
@@ -91,14 +91,14 @@ default Collection<ChessMove> addToBoard(int row, int col, ChessGame.TeamColor t
         validMoves.addAll(moves);
     }
     default void upRight(ChessPosition myPosition, int row, int col, ChessBoard board,
-                         ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
+                         ChessGame.TeamColor teamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         while ((row + 1 <= 8) & (col + 1 <= 8)){
             row += 1;
             col += 1;
             ChessPosition newPosition = new ChessPosition(row, col);
             ChessPiece newPiece = board.getPiece(newPosition);
-            moves = addToMoves(newPiece, TeamColor, row, col, myPosition, moves, newPosition);
+            moves = addToMoves(newPiece, teamColor, row, col, myPosition, moves, newPosition);
             if (newPiece != null){
                 break;
             }
@@ -106,14 +106,14 @@ default Collection<ChessMove> addToBoard(int row, int col, ChessGame.TeamColor t
         validMoves.addAll(moves);
     }
     default void upLeft(ChessPosition myPosition, int row, int col, ChessBoard board,
-                        ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
+                        ChessGame.TeamColor teamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         while ((row + 1 <= 8) & (col - 1 >= 1)){
             row += 1;
             col -= 1;
             ChessPosition newPosition = new ChessPosition(row, col);
             ChessPiece newPiece = board.getPiece(newPosition);
-            moves = addToMoves(newPiece, TeamColor, row, col, myPosition, moves, newPosition);
+            moves = addToMoves(newPiece, teamColor, row, col, myPosition, moves, newPosition);
             if (newPiece != null){
                 break;
             }
@@ -121,14 +121,14 @@ default Collection<ChessMove> addToBoard(int row, int col, ChessGame.TeamColor t
         validMoves.addAll(moves);
     }
     default void downRight(ChessPosition myPosition, int row, int col, ChessBoard board,
-                           ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
+                           ChessGame.TeamColor teamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         while ((row - 1 >= 1) & (col + 1 <= 8)){
             row -= 1;
             col += 1;
             ChessPosition newPosition = new ChessPosition(row, col);
             ChessPiece newPiece = board.getPiece(newPosition);
-            moves = addToMoves(newPiece, TeamColor, row, col, myPosition, moves, newPosition);
+            moves = addToMoves(newPiece, teamColor, row, col, myPosition, moves, newPosition);
             if (newPiece != null){
                 break;
             }
@@ -136,14 +136,14 @@ default Collection<ChessMove> addToBoard(int row, int col, ChessGame.TeamColor t
         validMoves.addAll(moves);
     }
     default void downLeft(ChessPosition myPosition, int row, int col, ChessBoard board,
-                          ChessGame.TeamColor TeamColor, Collection<ChessMove> validMoves){
+                          ChessGame.TeamColor teamColor, Collection<ChessMove> validMoves){
         Collection<ChessMove> moves = new ArrayList<>();
         while ((row - 1 >= 1) & (col - 1 >= 1)){
             row -= 1;
             col -= 1;
             ChessPosition newPosition = new ChessPosition(row, col);
             ChessPiece newPiece = board.getPiece(newPosition);
-            moves = addToMoves(newPiece, TeamColor, row, col, myPosition, moves, newPosition);
+            moves = addToMoves(newPiece, teamColor, row, col, myPosition, moves, newPosition);
             if (newPiece != null){
                 break;
             }

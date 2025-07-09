@@ -36,10 +36,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             }
             row += 1;
             if (row == 8) {
-                moves = pawnAddBoard(row, col, myposition, moves, board, QUEEN);
-                moves = pawnAddBoard(row, col, myposition, moves, board, BISHOP);
-                moves = pawnAddBoard(row, col, myposition, moves, board, ROOK);
-                moves = pawnAddBoard(row, col, myposition, moves, board, KNIGHT);
+                moves = addPromotionPiece(row, col, myposition, moves, board);
             } else {
                 moves = pawnAddBoard(row, col, myposition, moves, board, null);
             }
@@ -69,10 +66,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             }
             row -= 1;
             if (row == 1) {
-                moves = pawnAddBoard(row, col, myposition, moves, board, QUEEN);
-                moves = pawnAddBoard(row, col, myposition, moves, board, BISHOP);
-                moves = pawnAddBoard(row, col, myposition, moves, board, ROOK);
-                moves = pawnAddBoard(row, col, myposition, moves, board, KNIGHT);
+                addPromotionPiece(row, col, myposition, moves, board);
             } else {
                 moves = pawnAddBoard(row, col, myposition, moves, board, null);
             }
@@ -92,6 +86,15 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
         }
 //return moves
         return moves;
+    }
+
+    public Collection<ChessMove> addPromotionPiece(int row, int col, ChessPosition myposition,
+                                                   Collection<ChessMove> moves, ChessBoard board){
+            ChessPiece.PieceType[] promotions = {QUEEN,BISHOP, ROOK, KNIGHT};
+            for (ChessPiece.PieceType pieceType : promotions){
+                moves = pawnAddBoard(row, col, myposition, moves, board, pieceType);
+            }
+            return moves;
     }
 
     public Collection<ChessMove> pawnAddBoard(int row, int col, ChessPosition startposition,
