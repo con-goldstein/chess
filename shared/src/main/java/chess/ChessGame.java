@@ -103,26 +103,7 @@ public class ChessGame {
             if (piece != null && currentTeam == piece.getTeamColor()) {
                 Collection<ChessMove> validMoves = validMoves(startPosition);
                 if (validMoves.stream().anyMatch(validMove -> validMove.getEndPosition().equals(endPosition))) {
-                    //make the move
-                    //if piece is not a pawn
-                    if (piece.getPieceType() != ChessPiece.PieceType.PAWN) {
-                        chessBoard.addPiece(endPosition, piece);
-                    }
-                    //if piece is a pawn
-                    else {
-//                  if pawn is white and at end of board, change to promotion piece
-                        if (currentTeam == teamColor.WHITE && row == 8) {
-                            ChessPiece promoPiece = new ChessPiece(currentTeam, promotionPiece);
-                            chessBoard.addPiece(endPosition, promoPiece);
-                        }
-                        //if pawn is black and at end of board, change to promotion piece
-                        else if (currentTeam == teamColor.BLACK && row == 1) {
-                            ChessPiece promoPiece = new ChessPiece(currentTeam, promotionPiece);
-                            chessBoard.addPiece(endPosition, promoPiece);
-                        } else {
-                            chessBoard.addPiece(endPosition, piece);
-                        }
-                    }
+                    handlePawnPromotion(piece, endPosition, currentTeam, row, promotionPiece);
                     //change original position to null
                     chessBoard.addPiece(startPosition, null);
 //
@@ -144,6 +125,30 @@ public class ChessGame {
         }
         catch (InvalidMoveException e){
             throw new InvalidMoveException("Invalid move");
+        }
+    }
+
+    public void handlePawnPromotion(ChessPiece piece, ChessPosition endPosition, TeamColor currentTeam,
+                                    int row, ChessPiece.PieceType promotionPiece){
+        //make the move
+        //if piece is not a pawn
+        if (piece.getPieceType() != ChessPiece.PieceType.PAWN) {
+            chessBoard.addPiece(endPosition, piece);
+        }
+        //if piece is a pawn
+        else {
+//                  if pawn is white and at end of board, change to promotion piece
+            if (currentTeam == teamColor.WHITE && row == 8) {
+                ChessPiece promoPiece = new ChessPiece(currentTeam, promotionPiece);
+                chessBoard.addPiece(endPosition, promoPiece);
+            }
+            //if pawn is black and at end of board, change to promotion piece
+            else if (currentTeam == teamColor.BLACK && row == 1) {
+                ChessPiece promoPiece = new ChessPiece(currentTeam, promotionPiece);
+                chessBoard.addPiece(endPosition, promoPiece);
+            } else {
+                chessBoard.addPiece(endPosition, piece);
+            }
         }
     }
 
