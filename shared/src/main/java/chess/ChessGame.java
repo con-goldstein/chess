@@ -240,12 +240,10 @@ public class ChessGame {
             for (int j=1; j<=8; j++) {
                 ChessPiece piece = chessBoard.getPiece(new ChessPosition(i, j));
                 if (piece != null) {
-                    if (chessBoard.getPiece(new ChessPosition(i, j)).getPieceType() == ChessPiece.PieceType.KING) {
+                    if (chessBoard.getPiece(new ChessPosition(i, j)).getPieceType() == ChessPiece.PieceType.KING &&
+                    chessBoard.getPiece(new ChessPosition(i,j)).getTeamColor() == teamColor) {
                         ChessPosition pos = new ChessPosition(i, j);
-                        ChessPiece king = chessBoard.getPiece(pos);
-                        if (king.getTeamColor() == teamColor) {
                             kingPos = pos;
-                        }
                     }
                 }
             }
