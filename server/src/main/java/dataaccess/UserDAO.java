@@ -5,9 +5,10 @@ import Requests.*;
 import javax.xml.crypto.Data;
 
 public interface UserDAO{
-    boolean findUser(RegisterRequest registerRequest);
+    boolean findUser(String username);
+    boolean match(String username, String password);
 
     void createUser(RegisterRequest registerRequest, Response res) throws DataAccessException;
 
-    String addAuthToken(RegisterRequest registerRequest);
+    String addAuthToken(String username);
 }
