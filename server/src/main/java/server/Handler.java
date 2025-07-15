@@ -52,9 +52,6 @@ public class Handler {
         }
     }
 
-//    public Object logout(Request req, Response res){
-//        res.type("applicaion/json")
-//    }
     public Object logout(Request req, Response res){
         String authToken = req.headers("authorization");
         try{
@@ -69,10 +66,27 @@ public class Handler {
         }
     }
 
-//    public void clear(Request req, Response res){
-//        userDAO.clear();
-//        authDAO.clear();
-//        gameDAO.clear();
-//    }
+    public Object listGames(Request req, Response res){
+        String authToken = req.headers("authorization");
+        try{
+            HashSet<GameData> listResult = GameService.list(authToken, authDAO, gameDAO);
+            return new Gson().toJson(new ListResult(listResult));
+        } catch (UnauthorizedException e) {
+            return Unauthorized.response(res);
+        }
+    }
+
+    public Object clear(Request req, Response res){
+        try {
+            userDAO.clear();
+            authDAO.clear();
+            gameDAO.clear();
+            return "{}";
+        }
+        catch(Exception e){
+            res.status(500);
+            return "{ \"message\": \"Error:\" }";
+        }
+    }
 }
 
