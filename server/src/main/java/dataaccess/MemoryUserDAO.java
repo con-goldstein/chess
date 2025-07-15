@@ -9,15 +9,11 @@ import javax.xml.crypto.Data;
 
 public class MemoryUserDAO implements UserDAO {
     private final HashMap<String, UserData> userDatabase = new HashMap<>();
-    private final HashMap<String, AuthData> authDatabase = new HashMap<>();
-
     public boolean findUser(String username) {
         //null if user
         if (userDatabase.get(username) != null){
-            System.out.println("user found");
             return true;
         }
-        System.out.println("user not found");
         return false;
     }
 
@@ -30,8 +26,6 @@ public class MemoryUserDAO implements UserDAO {
         // if one of the fields is empty
             //add user to database
             userDatabase.put(r.username(), new UserData(r.username(), r.password(), r.email()));
-            System.out.println("user added to userDatabase");
-            System.out.println(userDatabase.get(r.username()));
         }
         catch (Exception e){
             res.status(500);
@@ -39,17 +33,9 @@ public class MemoryUserDAO implements UserDAO {
 
         }
     }
-    public String addAuthToken(String username){
-        //create authToken
-        String authToken = createAuth();
-        //add user data into database
-        AuthData authData = new AuthData(authToken, username);
-        authDatabase.put(username, authData);
-        return authToken;
+
+    public void clear(){
+        userDatabase.clear();
     }
 
-
-    public String createAuth(){
-        return UUID.randomUUID().toString();
-    }
 }
