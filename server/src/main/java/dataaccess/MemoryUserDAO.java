@@ -11,14 +11,18 @@ public class MemoryUserDAO implements UserDAO {
     private final HashMap<String, UserData> userDatabase = new HashMap<>();
     private final HashMap<String, AuthData> authDatabase = new HashMap<>();
 
-    public boolean findUser(RegisterRequest r) {
+    public boolean findUser(String username) {
         //null if user
-        if (userDatabase.get(r.username()) != null){
+        if (userDatabase.get(username) != null){
             System.out.println("user found");
             return true;
         }
         System.out.println("user not found");
         return false;
+    }
+
+    public boolean match(String username, String password){
+        return userDatabase.get(username).password().equals(password);
     }
 
     public void createUser(RegisterRequest r, Response res) throws DataAccessException {
@@ -35,12 +39,12 @@ public class MemoryUserDAO implements UserDAO {
 
         }
     }
-    public String addAuthToken(RegisterRequest r){
+    public String addAuthToken(String username){
         //create authToken
         String authToken = createAuth();
         //add user data into database
-        AuthData authData = new AuthData(authToken, r.username());
-        authDatabase.put(r.username(), authData);
+        AuthData authData = new AuthData(authToken, username);
+        authDatabase.put(username, authData);
         return authToken;
     }
 
