@@ -1,11 +1,14 @@
 package server;
 import dataaccess.*;
+import model.GameData;
 import server.exception.*;
 import service.*;
 import Requests.*;
 import Results.*;
 import com.google.gson.Gson;
 import spark.*;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class Handler {
     public UserDAO userDAO = new MemoryUserDAO();
@@ -18,7 +21,7 @@ public class Handler {
         var serializer = new Gson();
         var json = serializer.fromJson(req.body(), LoginRequest.class);
         try {
-            LoginResult loginResult = UserService.login(json, res, userDAO);
+            LoginResult loginResult = UserService.login(json, res, userDAO, authDAO);
             return serializer.toJson(loginResult);
         } catch (BadRequestException e) {
             return BadRequest.response(res);
@@ -36,7 +39,7 @@ public class Handler {
         var json = serializer.fromJson(req.body(), RegisterRequest.class);
         try {
             //register user
-            RegisterResult registerResult = UserService.register(json, res, userDAO);
+            RegisterResult registerResult = UserService.register(json, res, userDAO, authDAO);
             //return registerResult in json format
             return serializer.toJson(registerResult);
         } catch (AlreadyTakenException e) {
@@ -52,6 +55,19 @@ public class Handler {
 //    public Object logout(Request req, Response res){
 //        res.type("applicaion/json")
 //    }
+    public Object logout(Request req, Response res){
+        String authToken = req.headers("authorization");
+        try{
+            //returns "{}"
+            UserService.logout(new LogoutRequest(authToken), res, authDAO);
+            System.out.println("response status: " + res.status());
+            return "{}";
+        }
+        catch (UnauthorizedException e) {
+            res.status(401);
+            return "{ \"message\": \"Error:\" }";
+        }
+    }
 
 //    public void clear(Request req, Response res){
 //        userDAO.clear();
