@@ -13,8 +13,24 @@ public class Handler {
     public GameDAO gameDAO = new MemoryGameDAO();
 
 
+    public Object login(Request req, Response res) {
+        res.type("application/json");
+        var serializer = new Gson();
+        var json = serializer.fromJson(req.body(), LoginRequest.class);
+        try {
+            LoginResult loginResult = UserService.login(json, res, userDAO);
+            return serializer.toJson(loginResult);
+        } catch (BadRequestException e) {
+            return BadRequest.response(res);
+        } catch (UnauthorizedException e) {
+            return Unauthorized.response(res);
+        } catch (Exception e) {
+            res.status(500);
+            return "{ \"message\": \"Error:\" }";
+        }
+    }
 
-    public Object register(Request req, Response res) throws Exception{
+    public Object register(Request req, Response res) {
         res.type("application/json");
         var serializer = new Gson();
         var json = serializer.fromJson(req.body(), RegisterRequest.class);
@@ -23,15 +39,24 @@ public class Handler {
             RegisterResult registerResult = UserService.register(json, res, userDAO);
             //return registerResult in json format
             return serializer.toJson(registerResult);
-        }
-        catch (AlreadyTakenException e){
+        } catch (AlreadyTakenException e) {
             return AlreadyTaken.response(res);
-        } catch (BadRequestException e){
+        } catch (BadRequestException e) {
             return BadRequest.response(res);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             res.status(500);
             return "{ \"message\": \"Error:\" }";
         }
     }
+
+//    public Object logout(Request req, Response res){
+//        res.type("applicaion/json")
+//    }
+
+//    public void clear(Request req, Response res){
+//        userDAO.clear();
+//        authDAO.clear();
+//        gameDAO.clear();
+//    }
 }
+
