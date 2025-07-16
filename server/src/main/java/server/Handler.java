@@ -7,7 +7,7 @@ import Requests.*;
 import Results.*;
 import com.google.gson.Gson;
 import spark.*;
-import java.util.HashMap;
+
 import java.util.HashSet;
 
 public class Handler {
@@ -76,6 +76,24 @@ public class Handler {
         }
     }
 
+    public Object createGame(Request req, Response res){
+        try{
+            String authToken = req.headers("authorization");
+            GameRequest gameRequest = new Gson().fromJson(req.body(), GameRequest.class);
+            System.out.println("Request body: " + req.body());
+            CreateResult createResult = GameService.create(new CreateRequest(authToken, gameRequest.gameName()), authDAO, gameDAO);
+            return new Gson().toJson(createResult);
+        } catch(UnauthorizedException e){
+            return Unauthorized.response(res);
+        } catch(BadRequestException e){
+            return BadRequest.response(res);
+        } catch(Exception e){
+            res.status(500);
+            return "{ \"message\": \"Error:\" }";
+        }
+    }
+
+
     public Object clear(Request req, Response res){
         try {
             userDAO.clear();
@@ -88,5 +106,7 @@ public class Handler {
             return "{ \"message\": \"Error:\" }";
         }
     }
+
+    public record GameRequest(String gameName){}
 }
 
