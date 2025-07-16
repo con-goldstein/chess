@@ -4,21 +4,21 @@ import requests.*;
 import results.*;
 
 public class UserService {
-    public static LoginResult login(LoginRequest LoginRequest, UserDAO user, AuthDAO auth)
+    public static LoginResult login(LoginRequest Loginrequest, UserDAO user, AuthDAO auth)
             throws BadRequestException,
             UnauthorizedException{
-        if (LoginRequest.username() == null || LoginRequest.password() == null){
+        if (Loginrequest.username() == null || Loginrequest.password() == null){
             throw new BadRequestException("Missing username or password");
         }
-        boolean userFound = user.findUser(LoginRequest.username());
+        boolean userFound = user.findUser(Loginrequest.username());
         if (!userFound){
             throw new UnauthorizedException("User not found");
         }
         //user found, check if passwords match
-        boolean match = user.match(LoginRequest.username(), LoginRequest.password());
+        boolean match = user.match(Loginrequest.username(), Loginrequest.password());
         if (match){
-            String authToken = auth.addAuthToken(LoginRequest.username());
-            return new LoginResult(LoginRequest.username(), authToken);
+            String authToken = auth.addAuthToken(Loginrequest.username());
+            return new LoginResult(Loginrequest.username(), authToken);
         }
         else{
             throw new UnauthorizedException("Passwords do not match");
