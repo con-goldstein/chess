@@ -21,10 +21,20 @@ public class MemoryGameDAO implements GameDAO{
         int gameID = random.nextInt(1000);
         try {
             GameData gameData = new GameData(gameID, null, null, gameName, new ChessGame());
+            gameDatabase.add(gameData);
             return new CreateResult(gameData.GameID());
         }
         catch(Exception e){
             throw new BadRequestException("could not");
+        }
+    }
+    public void addGame(GameData game){
+        int gameID = game.GameID();
+        for (GameData oldGame : gameDatabase){
+            if (oldGame.GameID() == gameID){
+                gameDatabase.remove(oldGame);
+                gameDatabase.add(game);
+            }
         }
     }
 }
