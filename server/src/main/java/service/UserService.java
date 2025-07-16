@@ -1,8 +1,7 @@
 package service;
-import dataaccess.*;
+import dataAccess.*;
 import Requests.*;
 import Results.*;
-import spark.*;
 
 public class UserService {
     public static LoginResult login(LoginRequest LoginRequest, UserDAO user, AuthDAO auth)

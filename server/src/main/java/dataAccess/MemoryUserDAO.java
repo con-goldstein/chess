@@ -1,11 +1,7 @@
-package dataaccess;
+package dataAccess;
 import java.util.*;
 import Requests.RegisterRequest;
 import model.*;
-import java.util.UUID;
-import spark.Response;
-
-import javax.xml.crypto.Data;
 
 public class MemoryUserDAO implements UserDAO {
     private final HashMap<String, UserData> userDatabase = new HashMap<>();

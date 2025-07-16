@@ -1,8 +1,6 @@
-package dataaccess;
+package dataAccess;
 
-import Requests.RegisterRequest;
 import model.AuthData;
-import spark.Response;
 
 public interface AuthDAO {
     String addAuthToken(String username);

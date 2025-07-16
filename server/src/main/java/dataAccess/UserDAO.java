@@ -1,9 +1,5 @@
-package dataaccess;
-import model.UserData;
-import spark.Response;
+package dataAccess;
 import Requests.*;
-
-import javax.xml.crypto.Data;
 
 public interface UserDAO{
     void createUser(RegisterRequest registerRequest) throws DataAccessException;

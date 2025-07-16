@@ -4,15 +4,11 @@ import Requests.LoginRequest;
 import Requests.LogoutRequest;
 import Requests.RegisterRequest;
 import Results.RegisterResult;
-import dataaccess.*;
+import dataAccess.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import model.UserData;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
-
-import javax.xml.crypto.Data;
 
 class UserServiceTest {
     private static UserDAO user;
