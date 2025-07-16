@@ -5,7 +5,7 @@ import Results.*;
 import spark.*;
 
 public class UserService {
-    public static LoginResult login(LoginRequest LoginRequest, Response res, UserDAO user, AuthDAO auth)
+    public static LoginResult login(LoginRequest LoginRequest, UserDAO user, AuthDAO auth)
             throws BadRequestException,
             UnauthorizedException{
         if (LoginRequest.username() == null || LoginRequest.password() == null){
@@ -25,7 +25,7 @@ public class UserService {
             throw new UnauthorizedException("Passwords do not match");
         }
     }
-    public static RegisterResult register(RegisterRequest registerRequest, Response res, UserDAO user, AuthDAO auth)
+    public static RegisterResult register(RegisterRequest registerRequest, UserDAO user, AuthDAO auth)
             throws DataAccessException, AlreadyTakenException, BadRequestException {
 
         //username, password and email must not be null
@@ -39,7 +39,7 @@ public class UserService {
         //if no user is found:
         if (!userFound){
             //add user to database
-             user.createUser(registerRequest, res);
+             user.createUser(registerRequest);
 
             //add authToken and add to database
             String authToken = auth.addAuthToken(registerRequest.username());
@@ -61,7 +61,6 @@ public class UserService {
         }
         System.out.println("found authToken");
         authDAO.delete(logoutRequest.authToken());
-        res.status(200);
         return "{}";
     }
 }

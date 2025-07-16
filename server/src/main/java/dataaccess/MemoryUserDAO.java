@@ -21,16 +21,14 @@ public class MemoryUserDAO implements UserDAO {
         return userDatabase.get(username).password().equals(password);
     }
 
-    public void createUser(RegisterRequest r, Response res) throws DataAccessException {
+    public void createUser(RegisterRequest r) throws DataAccessException {
         try{
         // if one of the fields is empty
             //add user to database
             userDatabase.put(r.username(), new UserData(r.username(), r.password(), r.email()));
         }
         catch (Exception e){
-            res.status(500);
             throw new DataAccessException("error creating user");
-
         }
     }
 

@@ -21,7 +21,7 @@ public class Handler {
         var serializer = new Gson();
         var json = serializer.fromJson(req.body(), LoginRequest.class);
         try {
-            LoginResult loginResult = UserService.login(json, res, userDAO, authDAO);
+            LoginResult loginResult = UserService.login(json, userDAO, authDAO);
             return serializer.toJson(loginResult);
         } catch (BadRequestException e) {
             return BadRequest.response(res);
@@ -39,7 +39,7 @@ public class Handler {
         var json = serializer.fromJson(req.body(), RegisterRequest.class);
         try {
             //register user
-            RegisterResult registerResult = UserService.register(json, res, userDAO, authDAO);
+            RegisterResult registerResult = UserService.register(json, userDAO, authDAO);
             //return registerResult in json format
             return serializer.toJson(registerResult);
         } catch (AlreadyTakenException e) {
