@@ -1,5 +1,7 @@
 package service;
 
+import Requests.*;
+import Results.CreateResult;
 import dataaccess.*;
 import model.GameData;
 import java.util.HashSet;
@@ -13,5 +15,17 @@ public class GameService {
             throw new UnauthorizedException("could not find authToken");
         }
         return gameDAO.findGames();
+    }
+
+    public static CreateResult create(CreateRequest createRequest, AuthDAO authDAO, GameDAO gameDAO)
+    throws UnauthorizedException, BadRequestException{
+        boolean foundToken = authDAO.findAuthToken(createRequest.authToken());
+        if (!foundToken){
+            throw new UnauthorizedException("could not find authToken");
+        }
+        if ((createRequest.authToken() == null) || (createRequest.gamename() == null)){
+            throw new BadRequestException("authToken or gamename required");
+        }
+        return gameDAO.createGameData(createRequest.gamename(), createRequest.authToken());
     }
 }
