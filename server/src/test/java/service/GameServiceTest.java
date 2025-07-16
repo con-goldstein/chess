@@ -1,10 +1,10 @@
 package service;
 
 
-import Requests.*;
-import Results.CreateResult;
-import Results.RegisterResult;
-import dataAccess.*;
+import requests.*;
+import results.CreateResult;
+import results.RegisterResult;
+import dataaccess.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.*;

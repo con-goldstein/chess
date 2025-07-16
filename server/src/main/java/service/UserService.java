@@ -1,7 +1,7 @@
 package service;
-import dataAccess.*;
-import Requests.*;
-import Results.*;
+import dataaccess.*;
+import requests.*;
+import results.*;
 
 public class UserService {
     public static LoginResult login(LoginRequest LoginRequest, UserDAO user, AuthDAO auth)

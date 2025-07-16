@@ -1,6 +1,6 @@
-package dataAccess;
+package dataaccess;
 import java.util.*;
-import Requests.RegisterRequest;
+import requests.RegisterRequest;
 import model.*;
 
 public class MemoryUserDAO implements UserDAO {

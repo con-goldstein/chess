@@ -1,6 +1,6 @@
-package dataAccess;
+package dataaccess;
 
-import Results.CreateResult;
+import results.CreateResult;
 import chess.ChessGame;
 import model.*;
 import java.util.Random;

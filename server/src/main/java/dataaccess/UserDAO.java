@@ -1,5 +1,5 @@
-package dataAccess;
-import Requests.*;
+package dataaccess;
+import requests.*;
 
 public interface UserDAO{
     void createUser(RegisterRequest registerRequest) throws DataAccessException;

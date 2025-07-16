@@ -1,8 +1,8 @@
 package service;
 
-import Requests.*;
-import Results.CreateResult;
-import dataAccess.*;
+import requests.*;
+import results.CreateResult;
+import dataaccess.*;
 import model.GameData;
 
 import java.util.HashSet;
