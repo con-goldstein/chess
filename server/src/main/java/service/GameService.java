@@ -30,8 +30,7 @@ public class GameService {
         return gameDAO.createGameData(createRequest.gamename(), createRequest.authToken());
     }
 
-    public static GameData join(String authToken, JoinRequest joinRequest, AuthDAO authDAO, GameDAO gameDAO,
-                            UserDAO userDAO)
+    public static GameData join(String authToken, JoinRequest joinRequest, AuthDAO authDAO, GameDAO gameDAO)
             throws UnauthorizedException, BadRequestException, AlreadyTakenException{
 
         boolean foundToken = authDAO.findAuthToken(authToken);
@@ -73,7 +72,7 @@ public class GameService {
         throw new BadRequestException("idk");
     }
 
-    public static GameData findGame(int gameID, GameDAO gameDAO){
+    private static GameData findGame(int gameID, GameDAO gameDAO){
         for (GameData game : gameDAO.findGames()){
             if (game.gameID() == gameID){
                 return game;

@@ -100,7 +100,7 @@ public class Handler {
         try{
             String authToken = req.headers("authorization");
             JoinRequest joinRequest = new Gson().fromJson(req.body(), JoinRequest.class);
-            GameService.join(authToken, joinRequest, authDAO, gameDAO, userDAO);
+            GameService.join(authToken, joinRequest, authDAO, gameDAO);
             return "{}";
         }
         catch(AlreadyTakenException e){
