@@ -5,26 +5,27 @@ import Results.*;
 import spark.*;
 
 public class UserService {
-    public static LoginResult login(LoginRequest LoginRequest, Response res, UserDAO user) throws BadRequestException,
+    public static LoginResult login(LoginRequest LoginRequest, Response res, UserDAO user, AuthDAO auth)
+            throws BadRequestException,
             UnauthorizedException{
         if (LoginRequest.username() == null || LoginRequest.password() == null){
             throw new BadRequestException("Missing username or password");
         }
         boolean userFound = user.findUser(LoginRequest.username());
         if (!userFound){
-            throw new BadRequestException("User not found");
+            throw new UnauthorizedException("User not found");
         }
         //user found, check if passwords match
         boolean match = user.match(LoginRequest.username(), LoginRequest.password());
         if (match){
-            String authToken = user.addAuthToken(LoginRequest.username());
+            String authToken = auth.addAuthToken(LoginRequest.username());
             return new LoginResult(LoginRequest.username(), authToken);
         }
         else{
             throw new UnauthorizedException("Passwords do not match");
         }
     }
-    public static RegisterResult register(RegisterRequest registerRequest, Response res, UserDAO user)
+    public static RegisterResult register(RegisterRequest registerRequest, Response res, UserDAO user, AuthDAO auth)
             throws DataAccessException, AlreadyTakenException, BadRequestException {
 
         //username, password and email must not be null
@@ -41,7 +42,7 @@ public class UserService {
              user.createUser(registerRequest, res);
 
             //add authToken and add to database
-            String authToken = user.addAuthToken(registerRequest.username());
+            String authToken = auth.addAuthToken(registerRequest.username());
             return new RegisterResult(registerRequest.username(), authToken);
         }
         else{
@@ -51,7 +52,16 @@ public class UserService {
         }
     }
 
+    public static Object logout(LogoutRequest logoutRequest, Response res, AuthDAO authDAO)
+    throws UnauthorizedException{
+        boolean foundToken = authDAO.findAuthToken(logoutRequest.authToken());
 
-//    public LoginResult login(LoginRequest loginRequest){}
-//    public void logout(LogoutRequest logoutRequest){}
+        if (!foundToken){
+            throw new UnauthorizedException("Authentication Token not found");
+        }
+        System.out.println("found authToken");
+        authDAO.delete(logoutRequest.authToken());
+        res.status(200);
+        return "{}";
+    }
 }
