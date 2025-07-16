@@ -1,6 +1,6 @@
 package server;
 import dataaccess.*;
-import model.GameData;
+import model.*;
 import server.exception.*;
 import service.*;
 import Requests.*;
@@ -80,8 +80,8 @@ public class Handler {
         try{
             String authToken = req.headers("authorization");
             GameRequest gameRequest = new Gson().fromJson(req.body(), GameRequest.class);
-            System.out.println("Request body: " + req.body());
-            CreateResult createResult = GameService.create(new CreateRequest(authToken, gameRequest.gameName()), authDAO, gameDAO);
+            CreateResult createResult = GameService.create(new CreateRequest(authToken, gameRequest.gameName())
+                    ,authDAO, gameDAO);
             return new Gson().toJson(createResult);
         } catch(UnauthorizedException e){
             return Unauthorized.response(res);
@@ -93,7 +93,26 @@ public class Handler {
         }
     }
 
-
+    public Object joinGame(Request req, Response res){
+        try{
+            String authToken = req.headers("authorization");
+            JoinRequest joinRequest = new Gson().fromJson(req.body(), JoinRequest.class);
+            GameService.join(authToken, joinRequest, authDAO, gameDAO, userDAO);
+            return "{}";
+        }
+        catch(AlreadyTakenException e){
+            return AlreadyTaken.response(res);
+        }
+        catch(BadRequestException e){
+            return BadRequest.response(res);
+        }catch(UnauthorizedException e){
+            return Unauthorized.response(res);
+        }
+        catch(Exception e){
+            res.status(500);
+            return "{ \"message\": \"Error:\" }";
+        }
+    }
     public Object clear(Request req, Response res){
         try {
             userDAO.clear();
