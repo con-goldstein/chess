@@ -70,6 +70,9 @@ public class Handler {
         String authToken = req.headers("authorization");
         try{
             HashSet<GameData> listResult = GameService.list(authToken, authDAO, gameDAO);
+            for (GameData game : listResult){
+                System.out.println(game);
+            }
             return new Gson().toJson(new ListResult(listResult));
         } catch (UnauthorizedException e) {
             return Unauthorized.response(res);

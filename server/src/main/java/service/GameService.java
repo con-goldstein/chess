@@ -3,9 +3,7 @@ package service;
 import Requests.*;
 import Results.CreateResult;
 import dataaccess.*;
-import model.AuthData;
 import model.GameData;
-import model.UserData;
 
 import java.util.HashSet;
 
@@ -77,7 +75,7 @@ public class GameService {
 
     public static GameData findGame(int gameID, GameDAO gameDAO){
         for (GameData game : gameDAO.findGames()){
-            if (game.GameID() == gameID){
+            if (game.gameID() == gameID){
                 return game;
             }
         }

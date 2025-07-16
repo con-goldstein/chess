@@ -22,16 +22,16 @@ public class MemoryGameDAO implements GameDAO{
         try {
             GameData gameData = new GameData(gameID, null, null, gameName, new ChessGame());
             gameDatabase.add(gameData);
-            return new CreateResult(gameData.GameID());
+            return new CreateResult(gameData.gameID());
         }
         catch(Exception e){
             throw new BadRequestException("could not");
         }
     }
     public void addGame(GameData game){
-        int gameID = game.GameID();
+        int gameID = game.gameID();
         for (GameData oldGame : gameDatabase){
-            if (oldGame.GameID() == gameID){
+            if (oldGame.gameID() == gameID){
                 gameDatabase.remove(oldGame);
                 gameDatabase.add(game);
             }
