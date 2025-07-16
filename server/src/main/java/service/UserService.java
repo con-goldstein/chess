@@ -52,7 +52,7 @@ public class UserService {
         }
     }
 
-    public static Object logout(LogoutRequest logoutRequest, Response res, AuthDAO authDAO)
+    public static Object logout(LogoutRequest logoutRequest, AuthDAO authDAO)
     throws UnauthorizedException{
         boolean foundToken = authDAO.findAuthToken(logoutRequest.authToken());
 
