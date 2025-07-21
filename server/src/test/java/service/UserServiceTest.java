@@ -29,9 +29,8 @@ class UserServiceTest {
     @Test
     //create new user
     public void goodRegisterTest() throws DataAccessException, BadRequestException, AlreadyTakenException{
-    UserService.register(request, user, auth);
+        UserService.register(request, user, auth);
     }
-    //Assertions.asserDoesNotThrow
 
     @Test
     //registering multiple people with the same username
