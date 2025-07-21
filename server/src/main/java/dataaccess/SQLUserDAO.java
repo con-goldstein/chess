@@ -1,5 +1,6 @@
 package dataaccess;
 import model.*;
+import org.mindrot.jbcrypt.BCrypt;
 import requests.RegisterRequest;
 import java.sql.SQLException;
 
@@ -19,10 +20,11 @@ public class SQLUserDAO implements UserDAO{
         try (var conn = DatabaseManager.getConnection()) {
             boolean userFound = findUser(registerRequest.username());
             if (!userFound) {
+                String hashedPass = createHashedPassword(registerRequest.password());
                 var statement = "INSERT INTO user (username, password, email) VALUES(?, ?, ?)";
                 var preparedStatement = conn.prepareStatement(statement);
                 preparedStatement.setString(1, registerRequest.username());
-                preparedStatement.setString(2, registerRequest.password());
+                preparedStatement.setString(2, hashedPass);
                 preparedStatement.setString(3, registerRequest.email());
                 preparedStatement.executeUpdate();
             }
@@ -55,10 +57,8 @@ public class SQLUserDAO implements UserDAO{
             prepstatement.setString(1, username);
             try (var rs = prepstatement.executeQuery()){
                 if (rs.next()){
-                    var tablePassword = rs.getString("password");
-                    if (tablePassword.equals(password)){
-                        return true;
-                    }
+                    String hashedPass = rs.getString("password");
+                    return checkHashedPassword(hashedPass, password);
                 }
                 return false;
             }
@@ -75,5 +75,7 @@ public class SQLUserDAO implements UserDAO{
         }
         catch (SQLException | DataAccessException e){}
     }
-}
+
+
+    }
 
