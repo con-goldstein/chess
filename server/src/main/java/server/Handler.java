@@ -11,9 +11,22 @@ import spark.*;
 import java.util.HashSet;
 
 public class Handler {
-    public UserDAO userDAO = new MemoryUserDAO();
-    public AuthDAO authDAO = new MemoryAuthDAO();
-    public GameDAO gameDAO = new MemoryGameDAO();
+    private UserDAO userDAO;
+    private AuthDAO authDAO;
+    private GameDAO gameDAO;
+    public Handler() {
+        try {
+             UserDAO userDAO = new SQLUserDAO();
+//             AuthDAO authDAO = new SQLAuthDAO();
+//             GameDAO gameDAO = new SQLGameDAO();
+        } catch (Exception e){
+             UserDAO userDAO = new MemoryUserDAO();
+             AuthDAO authDAO = new MemoryAuthDAO();
+             GameDAO gameDAO = new MemoryGameDAO();
+        }
+    }
+
+
 
 
     public Object login(Request req, Response res) {
