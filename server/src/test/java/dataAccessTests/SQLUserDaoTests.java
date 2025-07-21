@@ -31,10 +31,11 @@ public class SQLUserDaoTests {
             var result = prepstatement.executeQuery();
             if (result.next()) {
                 String username = result.getString("username");
-                String pass = result.getString("password");
+                String hashedPass = result.getString("password");
+                boolean hashed_pass = userDAO.checkHashedPassword(hashedPass, "password");
                 String email = result.getString("email");
                 assertEquals("username", username);
-                assertEquals("password", pass);
+                assertTrue(hashed_pass);
                 assertEquals("email", email);
             }
         } catch (SQLException | DataAccessException e) {
