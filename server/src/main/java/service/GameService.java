@@ -27,7 +27,7 @@ public class GameService {
         if ((createRequest.authToken() == null) || (createRequest.gamename() == null)){
             throw new BadRequestException("authToken or gamename required");
         }
-        return gameDAO.createGameData(createRequest.gamename(), createRequest.authToken());
+        return gameDAO.createGameData(createRequest.gamename());
     }
 
     public static GameData join(String authToken, JoinRequest joinRequest, AuthDAO authDAO, GameDAO gameDAO)

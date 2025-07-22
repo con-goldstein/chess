@@ -12,11 +12,12 @@ public class MemoryGameDAO implements GameDAO{
     public void clear() {
         gameDatabase.clear();
     }
+
     public HashSet<GameData> findGames(){
         return gameDatabase;
     }
 
-    public CreateResult createGameData(String gameName, String authToken) throws BadRequestException{
+    public CreateResult createGameData(String gameName) throws BadRequestException{
         Random random = new Random();
         int gameID = random.nextInt(1000);
         try {

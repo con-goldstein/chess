@@ -8,6 +8,6 @@ import java.util.HashSet;
 public interface GameDAO {
     void clear();
     HashSet<GameData> findGames();
-    CreateResult createGameData(String gamename, String authToken) throws BadRequestException;
+    CreateResult createGameData(String gamename) throws BadRequestException;
     void addGame(GameData game);
 }
