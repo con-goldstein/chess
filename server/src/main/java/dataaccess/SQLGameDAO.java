@@ -56,8 +56,8 @@ public class SQLGameDAO implements GameDAO{
                 ChessGame chessGame = new ChessGame();
                 String json = new Gson().toJson(chessGame);
                 preparedStatement.setInt(1, gameID);
-                preparedStatement.setString(2, "white");
-                preparedStatement.setString(3, "black");
+                preparedStatement.setString(2,null);
+                preparedStatement.setString(3, null);
                 preparedStatement.setString(4, gamename);
                 preparedStatement.setString(5, json);
                 preparedStatement.executeUpdate();
@@ -91,7 +91,6 @@ public class SQLGameDAO implements GameDAO{
             }
         }
         catch(SQLException | DataAccessException e) {
-            System.out.println(e.getMessage());
         }
     }
 }
