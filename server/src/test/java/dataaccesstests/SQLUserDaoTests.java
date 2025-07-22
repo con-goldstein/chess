@@ -75,4 +75,17 @@ public class SQLUserDaoTests {
         boolean matched = userDAO.match(request.username(), "badPassword");
         assertFalse(matched);
     }
+
+    @Test public void clearTest() throws DataAccessException, SQLException {
+        userDAO.createUser(request);
+        userDAO.clear();
+        try (var conn = DatabaseManager.getConnection()){
+            var statement = "SELECT * FROM user WHERE username=?";
+            var prepStatement = conn.prepareStatement(statement);
+            prepStatement.setString(1, request.username());
+            try (var res = prepStatement.executeQuery()){
+                assertFalse(res.next());
+            }
+        }
+    }
 }

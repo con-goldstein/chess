@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import requests.RegisterRequest;
 
+import javax.xml.crypto.Data;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.SQLException;
@@ -106,6 +108,19 @@ public class SQLGameDAOTests {
         assertThrows(BadRequestException.class, () -> {
             gameDAO.createGameData("gameName");
         });
+    }
+
+    @Test public void clearTest() throws DataAccessException, SQLException, BadRequestException{
+        gameDAO.createGameData("gameName");
+        gameDAO.clear();
+        try (var conn = DatabaseManager.getConnection()){
+            var statement = "SELECT * FROM game WHERE gameName=?";
+            var prepStatement = conn.prepareStatement(statement);
+            prepStatement.setString(1, "gameName");
+            try (var res = prepStatement.executeQuery()){
+                assertFalse(res.next());
+            }
+        }
     }
 
 

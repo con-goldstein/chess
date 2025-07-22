@@ -136,4 +136,18 @@ public class SQLAuthDAOTests {
         AuthData data = authDAO.getauthData("badToken");
         assertNull(data);
     }
+
+    @Test public void clearTest() throws DataAccessException, SQLException{
+        String authToken = UUID.randomUUID().toString();
+        authDAO.addAuthToken("Connor", authToken);
+        authDAO.clear();
+        try (var conn = DatabaseManager.getConnection()){
+            var statement = "SELECT * FROM auth WHERE authToken=?";
+            var prepStatement = conn.prepareStatement(statement);
+            prepStatement.setString(1, authToken);
+            try (var res = prepStatement.executeQuery()){
+                assertFalse(res.next());
+            }
+        }
+    }
 }
