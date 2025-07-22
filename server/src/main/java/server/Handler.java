@@ -16,13 +16,13 @@ public class Handler {
     private GameDAO gameDAO;
     public Handler() {
         try {
-             UserDAO userDAO = new SQLUserDAO();
-             AuthDAO authDAO = new SQLAuthDAO();
-//             GameDAO gameDAO = new SQLGameDAO();
+              userDAO = new SQLUserDAO();
+              authDAO = new SQLAuthDAO();
+              gameDAO = new SQLGameDAO();
         } catch (Exception e){
-             UserDAO userDAO = new MemoryUserDAO();
-             AuthDAO authDAO = new MemoryAuthDAO();
-             GameDAO gameDAO = new MemoryGameDAO();
+              userDAO = new MemoryUserDAO();
+              authDAO = new MemoryAuthDAO();
+              gameDAO = new MemoryGameDAO();
         }
     }
 
@@ -76,6 +76,9 @@ public class Handler {
         catch (UnauthorizedException e) {
             res.status(401);
             return "{ \"message\": \"Error:\" }";
+        }catch(Exception e){
+            res.status(500);
+            return "{ \"message\": \"Error:\" }";
         }
     }
 
@@ -89,6 +92,9 @@ public class Handler {
             return new Gson().toJson(new ListResult(listResult));
         } catch (UnauthorizedException e) {
             return Unauthorized.response(res);
+        }catch(Exception e){
+            res.status(500);
+            return "{ \"message\": \"Error:\" }";
         }
     }
 
