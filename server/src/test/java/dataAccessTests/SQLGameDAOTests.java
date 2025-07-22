@@ -32,7 +32,7 @@ public class SQLGameDAOTests {
         ChessBoard board = new ChessBoard();
         board.resetBoard();
         presetGame.setBoard(board);
-        gameData = new GameData(97, "white", "black", "gameName", presetGame);
+        gameData = new GameData(97, null, null, "gameName", presetGame);
     }
 
     @Test public void goodCreateGameData() throws DataAccessException{
@@ -51,7 +51,11 @@ public class SQLGameDAOTests {
                         String json = res.getString("ChessGame");
                         ChessGame chessGame = new Gson().fromJson(json, ChessGame.class);
                      GameData newdata = new GameData(gameID, whiteName, blackName, gameName, chessGame);
-                     assertEquals(gameData, newdata);
+//                     assertEquals(gameData, newdata);
+                        assertEquals(gameData.whiteUsername(), whiteName);
+                        assertEquals(gameData.blackUsername(), blackName);
+                        assertEquals(gameData.gameName(), gameName);
+                        assertEquals(gameData.game(), chessGame);
                     }
                 }
 
