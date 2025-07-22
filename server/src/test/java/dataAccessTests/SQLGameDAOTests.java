@@ -6,7 +6,11 @@ import dataaccess.*;
 import model.GameData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 import requests.RegisterRequest;
+
+import javax.xml.crypto.Data;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.SQLException;
@@ -64,5 +68,28 @@ public class SQLGameDAOTests {
             });
         }
 
-//    @Test public void goodAddGames
-//    }
+    @Test public void goodAddGames(){
+        gameDAO.addGame(gameData);
+        try (var conn = DatabaseManager.getConnection()){
+            var statement = "SELECT * FROM game WHERE gameName=?";
+            var preparedStatement = conn.prepareStatement(statement);
+            preparedStatement.setString(1, "gameName");
+            try(var res = preparedStatement.executeQuery()) {
+                if (res.next()) {
+                    int gameID = 97;
+                    String whiteName = res.getString("whiteUsername");
+                    String blackName = res.getString("blackUsername");
+                    String gameName = res.getString("gameName");
+                    String json = res.getString("ChessGame");
+                    ChessGame chessGame = new Gson().fromJson(json, ChessGame.class);
+                    GameData newdata = new GameData(gameID, whiteName, blackName, gameName, chessGame);
+                    assertEquals(gameData, newdata);
+                }
+            }
+        }catch (SQLException | DataAccessException e){
+            System.out.println("couldn't add game");
+        }
+    }
+
+
+    }
