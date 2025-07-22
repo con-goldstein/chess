@@ -14,6 +14,7 @@ import javax.xml.crypto.Data;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.SQLException;
+import java.util.HashSet;
 
 public class SQLGameDAOTests {
     private GameDAO gameDAO;
@@ -89,6 +90,21 @@ public class SQLGameDAOTests {
         }catch (SQLException | DataAccessException e){
             System.out.println("couldn't add game");
         }
+    }
+
+    @Test public void goodfindGames() throws BadRequestException{
+        gameDAO.createGameData("gameName");
+        gameDAO.createGameData("anotherGameName");
+        HashSet<GameData> games = gameDAO.findGames();
+        boolean gameSize = (games.size() == 2);
+        assertTrue(gameSize);
+    }
+
+    @Test public void badFindGames() throws BadRequestException{
+        gameDAO.createGameData("gameName");
+        assertThrows(BadRequestException.class, () -> {
+            gameDAO.createGameData("gameName");
+        });
     }
 
 
