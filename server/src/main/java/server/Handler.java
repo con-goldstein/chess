@@ -17,7 +17,7 @@ public class Handler {
     public Handler() {
         try {
              UserDAO userDAO = new SQLUserDAO();
-//             AuthDAO authDAO = new SQLAuthDAO();
+             AuthDAO authDAO = new SQLAuthDAO();
 //             GameDAO gameDAO = new SQLGameDAO();
         } catch (Exception e){
              UserDAO userDAO = new MemoryUserDAO();

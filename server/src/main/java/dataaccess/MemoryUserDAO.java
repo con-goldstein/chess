@@ -28,6 +28,8 @@ public class MemoryUserDAO implements UserDAO {
         }
     }
 
+
+
     public void clear(){
         userDatabase.clear();
     }
