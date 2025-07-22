@@ -1,8 +1,5 @@
 package dataAccessTests;
-import dataaccess.DataAccessException;
-import dataaccess.DatabaseManager;
-import dataaccess.SQLUserDAO;
-import dataaccess.UserDAO;
+import dataaccess.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import requests.*;
