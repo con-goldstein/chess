@@ -29,6 +29,28 @@ public class DatabaseManager {
         }
     }
 
+    static public void createGameDatabase() throws DataAccessException, SQLException {
+        try (var conn = getConnection()) {
+
+            var useDatabase = "USE " + databaseName;
+            try (var usingDatabase = conn.prepareStatement(useDatabase);){
+                usingDatabase.executeUpdate();
+            }
+            //create game table
+            var createGameTable = """
+                            CREATE TABLE IF NOT EXISTS game ( 
+                            gameID int NOT NULL,
+                            whiteUsername varchar(255),
+                            blackUsername varchar(255),
+                            gameName varchar(255) NOT NULL PRIMARY KEY,
+                            ChessGame longtext NOT NULL
+                            )""";
+            try (var createdTableStatement = conn.prepareStatement(createGameTable)){
+                createdTableStatement.executeUpdate();
+            }
+        }
+    }
+
     static public void createUserDatabase() throws DataAccessException, SQLException {
         try (var conn = getConnection()) {
 
