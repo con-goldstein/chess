@@ -3,7 +3,7 @@ package dataaccess;
 import model.AuthData;
 
 public interface AuthDAO {
-    String addAuthToken(String username);
+    void addAuthToken(String username, String authToken);
     void clear();
     boolean findAuthToken(String authToken);
     void delete(String authToken);

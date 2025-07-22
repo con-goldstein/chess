@@ -3,6 +3,8 @@ import dataaccess.*;
 import requests.*;
 import results.*;
 
+import java.util.UUID;
+
 public class UserService {
     public static LoginResult login(LoginRequest loginRequest, UserDAO user, AuthDAO auth)
             throws BadRequestException,
@@ -17,7 +19,8 @@ public class UserService {
         //user found, check if passwords match
         boolean match = user.match(loginRequest.username(), loginRequest.password());
         if (match){
-            String authToken = auth.addAuthToken(loginRequest.username());
+            String authToken = UUID.randomUUID().toString();
+            auth.addAuthToken(loginRequest.username(), authToken);
             return new LoginResult(loginRequest.username(), authToken);
         }
         else{
@@ -41,7 +44,8 @@ public class UserService {
              user.createUser(registerRequest);
 
             //add authToken and add to database
-            String authToken = auth.addAuthToken(registerRequest.username());
+            String authToken = UUID.randomUUID().toString();
+            auth.addAuthToken(registerRequest.username(), authToken);
             return new RegisterResult(registerRequest.username(), authToken);
         }
         else{

@@ -15,25 +15,22 @@ public class SQLAuthDAO implements AuthDAO{
         DatabaseManager.createAuthDatabase();
     }
 
-    public String addAuthToken(String username){
-        String authToken = createAuth();
+    public void addAuthToken(String username, String authToken){
         try (var conn = DatabaseManager.getConnection()){
             var statement = "INSERT INTO auth (username, authToken) VALUES(?, ?)";
             var prepstatement = conn.prepareStatement(statement);
             prepstatement.setString(1, username);
             prepstatement.setString(2, authToken);
             prepstatement.executeUpdate();
-            return authToken;
         }
         catch (SQLException | DataAccessException e){
             e.printStackTrace();
-            return null;
         }
     }
 
     public void clear(){
         try (var conn = DatabaseManager.getConnection()){
-            var statement = "TRUNCATE auth";
+            var statement = "TRUNCATE TABLE auth";
             var prepstatement = conn.prepareStatement(statement);
             prepstatement.executeUpdate();
         }
@@ -57,11 +54,12 @@ public class SQLAuthDAO implements AuthDAO{
 
     public void delete(String authToken){
         try (var conn = DatabaseManager.getConnection()){
-            var statement = "DELETE * FROM auth WHERE authToken=?";
+            var statement = "DELETE FROM auth WHERE authToken=?";
             var preparedStatement = conn.prepareStatement(statement);
             preparedStatement.setString(1, authToken);
-            preparedStatement.executeQuery();
-        }catch (SQLException | DataAccessException e){}
+            preparedStatement.executeUpdate();
+        }catch (SQLException | DataAccessException e){
+        }
     }
 
     public AuthData getauthData(String authToken){
