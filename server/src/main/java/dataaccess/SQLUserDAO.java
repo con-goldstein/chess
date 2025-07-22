@@ -8,7 +8,6 @@ public class SQLUserDAO implements UserDAO{
     public SQLUserDAO() throws DataAccessException, SQLException {
         try {
             //create database
-            //do I need to create database before constructing every SQLDAO?
             DatabaseManager.createDatabase();
             DatabaseManager.createUserDatabase();
         }
@@ -69,7 +68,7 @@ public class SQLUserDAO implements UserDAO{
     }
     public void clear(){
         try (var conn = DatabaseManager.getConnection()){
-            var statement = "TRUNCATE user";
+            var statement = "TRUNCATE TABLE user";
             var prepstatement = conn.prepareStatement(statement);
             prepstatement.executeUpdate();
         }
