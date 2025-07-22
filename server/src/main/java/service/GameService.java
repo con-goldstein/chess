@@ -10,7 +10,8 @@ import java.util.HashSet;
 public class GameService {
 //    public CreateResult create(CreateRrequest createRequest){}
 //    public JoinResult join(JoinRequest joinRequest){}
-    public static HashSet<GameData> list(String authToken, AuthDAO authDAO, GameDAO gameDAO) throws UnauthorizedException{
+    public static HashSet<GameData> list(String authToken, AuthDAO authDAO, GameDAO gameDAO)
+            throws UnauthorizedException, DataAccessException {
         boolean foundToken = authDAO.findAuthToken(authToken);
         if (!foundToken){
             throw new UnauthorizedException("could not find authToken");
@@ -19,7 +20,7 @@ public class GameService {
     }
 
     public static CreateResult create(CreateRequest createRequest, AuthDAO authDAO, GameDAO gameDAO)
-    throws UnauthorizedException, BadRequestException{
+    throws UnauthorizedException, BadRequestException, DataAccessException{
         boolean foundToken = authDAO.findAuthToken(createRequest.authToken());
         if (!foundToken){
             throw new UnauthorizedException("could not find authToken");
@@ -31,7 +32,7 @@ public class GameService {
     }
 
     public static GameData join(String authToken, JoinRequest joinRequest, AuthDAO authDAO, GameDAO gameDAO)
-            throws UnauthorizedException, BadRequestException, AlreadyTakenException{
+            throws UnauthorizedException, BadRequestException, AlreadyTakenException, DataAccessException {
 
         boolean foundToken = authDAO.findAuthToken(authToken);
         if (!foundToken){
@@ -72,7 +73,7 @@ public class GameService {
         throw new BadRequestException("idk");
     }
 
-    private static GameData findGame(int gameID, GameDAO gameDAO){
+    private static GameData findGame(int gameID, GameDAO gameDAO) throws DataAccessException{
         for (GameData game : gameDAO.findGames()){
             if (game.gameID() == gameID){
                 return game;

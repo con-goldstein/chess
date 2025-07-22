@@ -135,7 +135,7 @@ public class Handler {
             return "{ \"message\": \"Error:\" }";
         }
     }
-    public Object clear(Request req, Response res){
+    public Object clear(Request req, Response res) {
         try {
             userDAO.clear();
             authDAO.clear();

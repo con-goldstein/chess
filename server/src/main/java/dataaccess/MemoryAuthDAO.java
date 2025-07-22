@@ -8,7 +8,7 @@ import java.util.UUID;
 public class MemoryAuthDAO implements AuthDAO {
     private final HashMap<String, AuthData> authDatabase = new HashMap<>();
 
-    public void addAuthToken(String username, String authToken){
+    public void addAuthToken(String username, String authToken) throws DataAccessException {
         //create authToken
         //add user data into database
         AuthData authData = new AuthData(authToken, username);

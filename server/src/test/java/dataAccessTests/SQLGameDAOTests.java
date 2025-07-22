@@ -73,7 +73,7 @@ public class SQLGameDAOTests {
             });
         }
 
-    @Test public void goodAddGames(){
+    @Test public void goodAddGames() throws DataAccessException {
         gameDAO.addGame(gameData);
         try (var conn = DatabaseManager.getConnection()){
             var statement = "SELECT * FROM game WHERE gameName=?";
@@ -96,7 +96,7 @@ public class SQLGameDAOTests {
         }
     }
 
-    @Test public void goodfindGames() throws BadRequestException{
+    @Test public void goodfindGames() throws BadRequestException, DataAccessException{
         gameDAO.createGameData("gameName");
         gameDAO.createGameData("anotherGameName");
         HashSet<GameData> games = gameDAO.findGames();

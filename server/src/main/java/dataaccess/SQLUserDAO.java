@@ -36,7 +36,7 @@ public class SQLUserDAO implements UserDAO{
         }
     }
 
-    public boolean findUser(String username) {
+    public boolean findUser(String username) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()){
             var statement = "SELECT * FROM user WHERE username=?";
             var preparedStatement = conn.prepareStatement(statement);
@@ -45,11 +45,11 @@ public class SQLUserDAO implements UserDAO{
                 return rs.next();
             }
         }
-        catch (SQLException | DataAccessException e){
-            return false;
+        catch (SQLException e){
+            throw new DataAccessException("unable to find user");
         }
     }
-    public boolean match(String username, String password){
+    public boolean match(String username, String password) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()){
             var statement = "SELECT password FROM user WHERE username=?";
             var prepstatement = conn.prepareStatement(statement);
@@ -62,17 +62,19 @@ public class SQLUserDAO implements UserDAO{
                 return false;
             }
         }
-        catch (SQLException | DataAccessException e){
-            return false;
+        catch (SQLException e){
+            throw new DataAccessException("unable to find password");
         }
     }
-    public void clear(){
+    public void clear() throws DataAccessException{
         try (var conn = DatabaseManager.getConnection()){
             var statement = "TRUNCATE TABLE user";
             var prepstatement = conn.prepareStatement(statement);
             prepstatement.executeUpdate();
         }
-        catch (SQLException | DataAccessException e){}
+        catch (SQLException e){
+            throw new DataAccessException("error in clear");
+        }
     }
 
 

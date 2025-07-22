@@ -63,7 +63,7 @@ public class SQLAuthDAOTests {
         });
     }
 
-    @Test public void goodfindAuthTokenTests(){
+    @Test public void goodfindAuthTokenTests() throws DataAccessException{
         String authToken = UUID.randomUUID().toString();
         authDAO.addAuthToken("Connor", authToken);
         try (var conn = DatabaseManager.getConnection()){
@@ -81,7 +81,7 @@ public class SQLAuthDAOTests {
         catch (SQLException | DataAccessException e){}
     }
 
-    @Test public void badfindAuthTokenTests(){
+    @Test public void badfindAuthTokenTests() throws DataAccessException {
         boolean foundToken = authDAO.findAuthToken("badToken");
         assertFalse(foundToken);
     }
@@ -106,7 +106,7 @@ public class SQLAuthDAOTests {
         assertDoesNotThrow(() -> authDAO.delete("badauthToken"));
     }
 
-    @Test public void goodGetAuthData(){
+    @Test public void goodGetAuthData() throws DataAccessException{
         String authToken = UUID.randomUUID().toString();
         authDAO.addAuthToken("Connor", authToken);
         AuthData data = authDAO.getauthData(authToken);
@@ -131,7 +131,7 @@ public class SQLAuthDAOTests {
         }
     }
 
-    @Test public void badGetAuthData(){
+    @Test public void badGetAuthData() throws DataAccessException{
         String authToken = UUID.randomUUID().toString();
         authDAO.addAuthToken("Connor", authToken);
         AuthData data = authDAO.getauthData("badToken");

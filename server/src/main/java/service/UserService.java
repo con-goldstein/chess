@@ -7,8 +7,7 @@ import java.util.UUID;
 
 public class UserService {
     public static LoginResult login(LoginRequest loginRequest, UserDAO user, AuthDAO auth)
-            throws BadRequestException,
-            UnauthorizedException{
+            throws BadRequestException, UnauthorizedException, DataAccessException{
         if (loginRequest.username() == null || loginRequest.password() == null){
             throw new BadRequestException("Missing username or password");
         }
@@ -56,7 +55,7 @@ public class UserService {
     }
 
     public static Object logout(LogoutRequest logoutRequest, AuthDAO authDAO)
-    throws UnauthorizedException{
+    throws UnauthorizedException, DataAccessException{
         boolean foundToken = authDAO.findAuthToken(logoutRequest.authToken());
 
         if (!foundToken){
