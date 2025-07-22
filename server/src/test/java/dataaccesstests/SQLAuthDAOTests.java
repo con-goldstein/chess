@@ -1,4 +1,4 @@
-package dataAccessTests;
+package dataaccesstests;
 import dataaccess.*;
 import model.AuthData;
 import org.junit.jupiter.api.*;
@@ -8,7 +8,6 @@ import org.opentest4j.AssertionFailedError;
 import requests.*;
 
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.UUID;
 
 public class SQLAuthDAOTests {

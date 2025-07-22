@@ -1,4 +1,4 @@
-package dataAccessTests;
+package dataaccesstests;
 import dataaccess.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,10 +29,10 @@ public class SQLUserDaoTests {
             if (result.next()) {
                 String username = result.getString("username");
                 String hashedPass = result.getString("password");
-                boolean hashed_pass = userDAO.checkHashedPassword(hashedPass, "password");
+                boolean hashedPassword = userDAO.checkHashedPassword(hashedPass, "password");
                 String email = result.getString("email");
                 assertEquals("username", username);
-                assertTrue(hashed_pass);
+                assertTrue(hashedPassword);
                 assertEquals("email", email);
             }
         } catch (SQLException | DataAccessException e) {
