@@ -42,7 +42,7 @@ public class DatabaseManager {
                             gameID int NOT NULL,
                             whiteUsername varchar(255),
                             blackUsername varchar(255),
-                            gameName varchar(255) NOT NULL PRIMARY KEY,
+                            gameName varchar(255) NOT NULL,
                             ChessGame longtext NOT NULL
                             )""";
             try (var createdTableStatement = conn.prepareStatement(createGameTable)){
@@ -59,13 +59,13 @@ public class DatabaseManager {
                 usingDatabase.executeUpdate();
             }
         //create auth table
-            var createAuthTable = """
+            var createUserTable = """
                             CREATE TABLE IF NOT EXISTS user ( 
-                            username varchar(255) NOT NULL PRIMARY KEY,
+                            username varchar(255) NOT NULL,
                             password varchar(255) NOT NULL,
                             email varchar(255) NOT NULL
                             )""";
-            try (var createdTableStatement = conn.prepareStatement(createAuthTable)){
+            try (var createdTableStatement = conn.prepareStatement(createUserTable)){
                 createdTableStatement.executeUpdate();
             }
         }
@@ -81,7 +81,7 @@ public class DatabaseManager {
             //create auth table
             var createAuthTable = """
                             CREATE TABLE IF NOT EXISTS auth ( 
-                            username varchar(255) NOT NULL PRIMARY KEY,
+                            username varchar(255) NOT NULL,
                             authToken varchar(255) NOT NULL  
                             )""";
             try (var createdTableStatement = conn.prepareStatement(createAuthTable)){
