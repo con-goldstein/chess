@@ -42,7 +42,7 @@ public class DatabaseManager {
                             gameID int NOT NULL,
                             whiteUsername varchar(255),
                             blackUsername varchar(255),
-                            gameName varchar(255) NOT NULL,
+                            gameName varchar(255) NOT NULL PRIMARY KEY,
                             ChessGame longtext NOT NULL
                             )""";
             try (var createdTableStatement = conn.prepareStatement(createGameTable)){
