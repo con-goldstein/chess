@@ -1,14 +1,11 @@
-package dataaccesstests;
+package dataaccess;
 
 import chess.*;
 import com.google.gson.Gson;
-import dataaccess.*;
 import model.GameData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import requests.RegisterRequest;
-
-import javax.xml.crypto.Data;
 
 import static org.junit.jupiter.api.Assertions.*;
 
