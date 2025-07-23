@@ -2,6 +2,8 @@ package dataaccesstests;
 import dataaccess.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.mindrot.jbcrypt.BCrypt;
 import requests.*;
 
 import java.sql.SQLException;
@@ -29,7 +31,7 @@ public class SQLUserDaoTests {
             if (result.next()) {
                 String username = result.getString("username");
                 String hashedPass = result.getString("password");
-                boolean hashedPassword = userDAO.checkHashedPassword(hashedPass, "password");
+                boolean hashedPassword = checkHashedPassword(hashedPass, "password");
                 String email = result.getString("email");
                 assertEquals("username", username);
                 assertTrue(hashedPassword);
@@ -38,6 +40,9 @@ public class SQLUserDaoTests {
         } catch (SQLException | DataAccessException e) {
             throw new DataAccessException("could not create user");
         }
+    }
+    public boolean checkHashedPassword(String hashedPassword, String providedClearTextPassword) {
+        return BCrypt.checkpw(providedClearTextPassword, hashedPassword);
     }
 
     @Test

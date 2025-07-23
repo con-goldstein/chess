@@ -76,6 +76,13 @@ public class SQLUserDAO implements UserDAO{
             throw new DataAccessException("error in clear");
         }
     }
+    public String createHashedPassword(String clearTextPassword) {
+        return BCrypt.hashpw(clearTextPassword, BCrypt.gensalt());
+    }
+
+    public boolean checkHashedPassword(String hashedPassword, String providedClearTextPassword) {
+        return BCrypt.checkpw(providedClearTextPassword, hashedPassword);
+    }
 
 
     }
