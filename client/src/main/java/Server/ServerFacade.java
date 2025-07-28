@@ -34,6 +34,10 @@ public class ServerFacade {
         makeRequest("DELETE", "/session", request, null);
     }
 
+    public void join(JoinRequest request){
+        makeRequest("PUT", "/game", request, null);
+    }
+
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) {
         try {
             HttpURLConnection http = (HttpURLConnection) (new URI(serverurl + path)).toURL().openConnection();
