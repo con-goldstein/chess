@@ -1,4 +1,4 @@
-import Server.ServerFacade;
+import server.ServerFacade;
 import exceptions.AlreadyTakenException;
 import exceptions.BadRequestException;
 import exceptions.DataAccessException;
@@ -43,7 +43,7 @@ public void run() {
         } catch (AlreadyTakenException | UnauthorizedException | BadRequestException | DataAccessException e) {
             System.out.println(e.getMessage());
         }
-        System.out.print(SET_TEXT_COLOR_GREEN + "Input action >>> " + RESET_TEXT_BOLD_FAINT);
+        System.out.print(SET_TEXT_COLOR_GREEN + "Input action >>> " + RESET_TEXT_COLOR);
         result = scanner.nextLine();
     }
     System.out.println("Thanks for playing chess");

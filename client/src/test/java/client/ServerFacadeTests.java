@@ -10,7 +10,7 @@ import org.junit.jupiter.api.*;
 import requests.*;
 import results.*;
 import server.Server;
-import Server.ServerFacade;
+import server.ServerFacade;
 
 import java.sql.SQLException;
 import java.util.HashSet;

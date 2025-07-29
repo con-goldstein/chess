@@ -1,4 +1,4 @@
-import Server.ServerFacade;
+import server.ServerFacade;
 import exceptions.AlreadyTakenException;
 import exceptions.BadRequestException;
 import exceptions.DataAccessException;
