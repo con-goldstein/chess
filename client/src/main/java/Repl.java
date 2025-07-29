@@ -28,13 +28,13 @@ public void run() {
             "login <USERNAME> <PASSWORD> - to play chess \n" +
                     "quit - playing chess \n" +
                     "help - with possible commands";
-    System.out.println(helpLine);
-    System.out.print(SET_TEXT_FAINT + "Input action >>> " + RESET_TEXT_BOLD_FAINT);
+    System.out.println(RESET_TEXT_COLOR + helpLine);
+    System.out.print(SET_TEXT_COLOR_GREEN + "Input action >>> " + RESET_TEXT_COLOR);
     String result = scanner.nextLine();
     while (!result.equals("quit")){
         if (result.equals("help")){
             System.out.println(helpLine);
-            System.out.print(SET_TEXT_BLINKING + "Input action >>> " + RESET_TEXT_BOLD_FAINT);
+            System.out.print(SET_TEXT_COLOR_GREEN + "Input action >>> " + RESET_TEXT_COLOR);
             result = scanner.nextLine();
             continue;
         }
@@ -43,7 +43,7 @@ public void run() {
         } catch (AlreadyTakenException | UnauthorizedException | BadRequestException | DataAccessException e) {
             System.out.println(e.getMessage());
         }
-        System.out.print(SET_TEXT_FAINT + "Input action >>> " + RESET_TEXT_BOLD_FAINT);
+        System.out.print(SET_TEXT_COLOR_GREEN + "Input action >>> " + RESET_TEXT_BOLD_FAINT);
         result = scanner.nextLine();
     }
     System.out.println("Thanks for playing chess");

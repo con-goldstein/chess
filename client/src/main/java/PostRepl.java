@@ -9,14 +9,14 @@ import results.*;
 
 import java.util.*;
 
-import static ui.EscapeSequences.RESET_TEXT_BOLD_FAINT;
-import static ui.EscapeSequences.SET_TEXT_FAINT;
+import static ui.EscapeSequences.*;
 
 public class PostRepl {
 ServerFacade server;
 PreRepl preRepl;
 HashMap<Integer, GameData> gamesMap = new HashMap<>();
 Repl repl;
+public boolean inGame = false;
 
 public PostRepl(ServerFacade serverFacade, PreRepl preRepl, Repl repl){
     this.server = serverFacade;
@@ -27,12 +27,12 @@ public PostRepl(ServerFacade serverFacade, PreRepl preRepl, Repl repl){
 public void postEval() throws BadRequestException, AlreadyTakenException,
         UnauthorizedException, DataAccessException {
     String helpLine = "create <Name> - a game\n" +
-            "list - game\n join <ID> [WHITE/BLACK] - a game\n observe <ID> - a game\n logout- when you are done\n" +
-            "quit - playing chess\n help - with possible commands";
-    System.out.println(helpLine);
+            "list - game\njoin <ID> [WHITE/BLACK] - a game\nobserve <ID> - a game\nlogout- when you are done\n" +
+            "quit - playing chess\nhelp - with possible commands";
+    System.out.println(RESET_TEXT_COLOR + helpLine);
     Scanner scanner = repl.scanner;
     while (true) {
-        System.out.print(SET_TEXT_FAINT + "Input action >>> " + RESET_TEXT_BOLD_FAINT);
+        System.out.print(SET_TEXT_COLOR_GREEN + ">>> " + RESET_TEXT_COLOR);
         String result = scanner.nextLine();
         var splitResult = result.split(" ");
         String keyWord = splitResult[0];
@@ -46,9 +46,9 @@ public void postEval() throws BadRequestException, AlreadyTakenException,
                     break;
                 case "logout":
                         server.logout();
-                        System.out.println("logged out successfully\n");
+                        System.out.println("logged out successfully\n" + RESET_TEXT_COLOR);
                         repl.loggedIn = false;
-                        break;
+                        return;
                 case "create":
                     if (splitResult.length == 2) {
                         try {
@@ -63,53 +63,80 @@ public void postEval() throws BadRequestException, AlreadyTakenException,
                         throw new BadRequestException("Please provide gameName to create");
                     }
                 case "list":
-                    try{
-                        ListResult listResult = server.list();
-                        HashSet<GameData> games = listResult.games();
-                        if (!games.isEmpty()){
-                            int counter = 1;
-                            for (GameData game : games) {
-                                System.out.printf("%d: gameName = %s, whiteUsername = %s, blackUsername = %s\n",
-                                        counter, game.gameName(), game.whiteUsername(), game.blackUsername());
-                                gamesMap.put(counter, game);
-                                counter += 1;
-                            }
-                            break;
-                        }
-                        else{System.out.println("No games to list. Please create game to add to database"); break;}
-
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                    listGames(server, gamesMap);
+                    break;
 
                 case "join":
-                    if (splitResult.length == 3) {
-                        int gameNumber = Integer.parseInt(splitResult[1]);
-                        //goes into the map and gets the gameID from the listed number
-                        if (gamesMap.containsKey(gameNumber)) {
-                            int gameID = gamesMap.get(gameNumber).gameID();
-                            server.join(new JoinRequest(splitResult[2], gameID));
-                            System.out.println("Game joined");
-                            break;
-                        } else {
-                            System.out.println("game not found, please try again");
+                    try {
+                        if (inGame){
+                            System.out.println("You are already playing, please first finish your game to join another");
                             break;
                         }
-                    } else {
-                        System.out.println("Please provide valid player color and game ID to join");
-                    }
+                        if (splitResult.length == 3) {
+                            int gameNumber = Integer.parseInt(splitResult[1]);
+                            //goes into the map and gets the gameID from the listed number
+                            if (gamesMap.containsKey(gameNumber)) {
+                                int gameID = gamesMap.get(gameNumber).gameID();
+                                server.join(new JoinRequest(splitResult[2], gameID));
+                                System.out.println("Game joined as " + splitResult[2]);
+                                inGame = true;
+                                break;
+                            } else {
+                                System.out.println("game not found, please try again");
+                            }
+                        }
+                        else{
+                            System.out.println("Please provide valid player color and game ID to join");
+                        }
+                    }catch (NumberFormatException e){
+                        System.out.println("Invalid game number: must be an integer.");
+                        }
+                    catch (AlreadyTakenException e){throw new AlreadyTakenException("that color is already taken, " +
+                            "please choose another color/game");}
+                    break;
+
                 case "observe":
                     if (splitResult.length == 2) {
-                        int gameNumber = Integer.parseInt(splitResult[1]);
-                        if (gamesMap.containsKey(gameNumber)) {
-                            int gameID = gamesMap.get(gameNumber).gameID();
-                            System.out.println("game is observable with gameID " + gameID);
-                            //call observe function?
-                            break;
+                        try {
+                            int gameNumber = Integer.parseInt(splitResult[1]);
+                            if (gamesMap.containsKey(gameNumber)) {
+                                int gameID = gamesMap.get(gameNumber).gameID();
+                                System.out.println("game is observable with gameID " + gameID);
+                                //call observe function?
+                                break;
+                            }
+                            else {
+                                System.out.println("Game not found, choose another to observe");
+                            }
+                        }catch(NumberFormatException e){
+                            System.out.println("Invalid game number, please enter a number");
                         }
                     }
+                    else {
+                        System.out.println("Please provide gameName after keyword observe");
+                    }
+                    break;
             }
     }
 }
+
+public static void listGames(ServerFacade server, HashMap<Integer, GameData> gamesMap){
+    try{
+    ListResult listResult = server.list();
+    HashSet<GameData> games = listResult.games();
+    if (!games.isEmpty()){
+        int counter = 1;
+        for (GameData game : games) {
+            System.out.printf("%d: gameName = %s, whiteUsername = %s, blackUsername = %s\n",
+                    counter, game.gameName(), game.whiteUsername(), game.blackUsername());
+            gamesMap.put(counter, game);
+            counter += 1;
+        }
+    }
+    else{System.out.println("No games to list. Please create game to add to database");}
+
+} catch (Exception e) {
+    throw new RuntimeException(e);
+}}
 
 }

@@ -7,23 +7,21 @@ import java.nio.charset.StandardCharsets;
 
 import static ui.EscapeSequences.*;
 
-public class chessBoardui {
+public class ChessBoardUI {
     //board dimension
-    private static final int boardSize = 8;
-    private static final int squareSize = 1;
-    private static final int lineWidth = 1;
+    private static final int BOARD_SIZE = 8;
+    private static final int SQUARE_SIZE = 1;
+    private static final int LINE_WIDTH = 1;
     static ChessBoard board;
 
 private static final String EMPTY = " ";
-public chessBoardui(ChessBoard board){
-    chessBoardui.board = board != null ? board : new ChessGame().getBoard();
+public ChessBoardUI(ChessBoard board){
+    ChessBoardUI.board = board != null ? board : new ChessGame().getBoard();
 }
 
 
 public static void main(String[] args) {
     var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-
-    getBoard();
 
     out.print(ERASE_SCREEN);
 
@@ -37,29 +35,17 @@ public static void main(String[] args) {
     out.print(SET_TEXT_COLOR_WHITE);
 }
 
-private static void getBoard(){
-    for (int i=0; i < boardSize; i++){
-        for (int j=0; j < boardSize; j++){
-            ChessPiece piece = board.getPiece(new ChessPosition(i, j));
-            if (piece != null){
-                ChessPiece.PieceType type = piece.getPieceType();
-                var color = piece.getTeamColor();
-
-            }
-        }
-    }
-}
 
     private static void drawHeaders(PrintStream out) {
 
         setBlack(out);
 
         String[] headers = { " ", "h", "g", "f", "e", "d", "c", "b", "a", " " };
-        for (int boardCol = 0; boardCol < boardSize; ++boardCol) {
+        for (int boardCol = 0; boardCol < BOARD_SIZE; ++boardCol) {
             drawHeader(out, headers[boardCol]);
 
-            if (boardCol < boardSize - 1) {
-                out.print(EMPTY.repeat(lineWidth));
+            if (boardCol < BOARD_SIZE - 1) {
+                out.print(EMPTY.repeat(LINE_WIDTH));
             }
         }
 
@@ -67,8 +53,8 @@ private static void getBoard(){
     }
 
     private static void drawHeader(PrintStream out, String headerText) {
-        int prefixLength = squareSize / 2;
-        int suffixLength = squareSize - prefixLength - 1;
+        int prefixLength = SQUARE_SIZE / 2;
+        int suffixLength = SQUARE_SIZE - prefixLength - 1;
 
         out.print(EMPTY.repeat(prefixLength));
         printHeaderText(out, headerText);
@@ -85,13 +71,13 @@ private static void getBoard(){
     }
 
     private static void drawChessBoard(PrintStream out) {
-        for (int boardRow = 0; boardRow < boardSize; boardRow++) {
-            for (int squareRow = 0; squareRow < squareSize; squareRow++){
-                for (int boardCol=0; boardCol < boardSize; boardCol++) {
+        for (int boardRow = 0; boardRow < BOARD_SIZE; boardRow++) {
+            for (int squareRow = 0; squareRow < SQUARE_SIZE; squareRow++){
+                for (int boardCol = 0; boardCol < BOARD_SIZE; boardCol++) {
                     if (boardRow + boardCol / 2 == 0){setWhite(out);}
                     else {setBlack(out);
 //                        if (squareRow == squareSize / 2) {
-                            int prefixLength = squareSize / 2;
+                            int prefixLength = SQUARE_SIZE / 2;
                             int suffixLength = 0;
 //                        }
                     drawSquare(out, boardRow, boardCol);
@@ -101,7 +87,7 @@ private static void getBoard(){
 
             drawRowOfSquares(out);
 
-            if (boardRow < boardSize - 1) {
+            if (boardRow < BOARD_SIZE - 1) {
                 // Draw horizontal row separator.
                 drawHorizontalLine(out);
                 setBlack(out);
@@ -114,27 +100,27 @@ private static void getBoard(){
 
     private static void drawRowOfSquares(PrintStream out) {
 
-        for (int squareRow = 0; squareRow < squareSize; ++squareRow) {
-            for (int boardCol = 0; boardCol < boardSize; ++boardCol) {
+        for (int squareRow = 0; squareRow < SQUARE_SIZE; ++squareRow) {
+            for (int boardCol = 0; boardCol < BOARD_SIZE; ++boardCol) {
                 setWhite(out);
 
-                if (squareRow == squareSize / 2) {
+                if (squareRow == SQUARE_SIZE / 2) {
                     setBlack(out);
-                    int prefixLength = squareSize / 2;
-                    int suffixLength = squareSize - prefixLength - 1;
+                    int prefixLength = SQUARE_SIZE / 2;
+                    int suffixLength = SQUARE_SIZE - prefixLength - 1;
 
                     out.print(EMPTY.repeat(prefixLength));
                     printPlayer(out, WHITE_KING);
                     out.print(EMPTY.repeat(suffixLength));
                 }
                 else {
-                    out.print(EMPTY.repeat(squareSize));
+                    out.print(EMPTY.repeat(SQUARE_SIZE));
                 }
 
-                if (boardCol < boardSize - 1) {
+                if (boardCol < BOARD_SIZE - 1) {
                     // Draw vertical column separator.
                     setRed(out);
-                    out.print(EMPTY.repeat(lineWidth));
+                    out.print(EMPTY.repeat(LINE_WIDTH));
                 }
 
                 setBlack(out);
@@ -146,10 +132,10 @@ private static void getBoard(){
 
     private static void drawHorizontalLine(PrintStream out) {
 
-        int boardSizeInSpaces = boardSize * squareSize +
-                (boardSize - 1) * lineWidth;
+        int boardSizeInSpaces = BOARD_SIZE * SQUARE_SIZE +
+                (BOARD_SIZE - 1) * LINE_WIDTH;
 
-        for (int lineRow = 0; lineRow < lineWidth; ++lineRow) {
+        for (int lineRow = 0; lineRow < LINE_WIDTH; ++lineRow) {
             setRed(out);
             out.print(EMPTY.repeat(boardSizeInSpaces));
 
@@ -173,10 +159,6 @@ private static void getBoard(){
         out.print(SET_TEXT_COLOR_BLACK);
     }
 
-    private static void setDarkGrey(PrintStream out){
-    out.print(SET_BG_COLOR_DARK_GREY);
-    out.print(SET_TEXT_COLOR_DARK_GREY);
-    }
 
     private static void printPlayer(PrintStream out, String player) {
         out.print(SET_BG_COLOR_WHITE);
