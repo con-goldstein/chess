@@ -50,17 +50,25 @@ public class ServerFacade {
         makeRequest("PUT", "/game", request, null);
     }
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) {
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass)
+            throws AlreadyTakenException, BadRequestException, UnauthorizedException {
         try {
             HttpURLConnection http = (HttpURLConnection) (new URI(serverurl + path)).toURL().openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
+            http.setRequestProperty("authorization", authToken);
             writeBody(request, http);
             http.connect();
+            throwIfNotSuccessful(http);
             return readBody(http, responseClass);
-
-        } catch (Exception e) {
+        } catch (AlreadyTakenException e) {
+            throw new AlreadyTakenException(e.getMessage());
+        }catch (BadRequestException e){
+                throw new BadRequestException(e.getMessage());
+        } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
+        } catch (UnauthorizedException e){
+            throw new UnauthorizedException(e.getMessage());
         }
     }
 
@@ -85,5 +93,32 @@ public class ServerFacade {
             }
         }
         return response;
+    }
+    private void throwIfNotSuccessful(HttpURLConnection http) throws IOException, BadRequestException, UnauthorizedException, AlreadyTakenException {
+        var status = http.getResponseCode();
+        if (!isSuccessful(status)) {
+            try (InputStream respErr = http.getErrorStream()) {
+                String errorMessage = "Random error";
+                InputStreamReader reader = new InputStreamReader(respErr);
+                JsonObject json = new Gson().fromJson(reader, JsonObject.class);
+                if (json.has("message")) {
+                    errorMessage = json.get("message").getAsString();
+                }
+                //badRequest
+                if (status == 400) {
+                    throw new BadRequestException(errorMessage);
+                }
+                //unauthorized
+                else if (status == 401) {
+                    throw new UnauthorizedException(errorMessage);
+                } else if (status == 403) {
+                    throw new AlreadyTakenException(errorMessage);
+                }
+            }
+        }
+    }
+
+    private boolean isSuccessful(int status) {
+        return status / 100 == 2;
     }
 }
