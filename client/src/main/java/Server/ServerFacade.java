@@ -46,7 +46,7 @@ public class ServerFacade {
         return true;
     }
 
-    public void join(JoinRequest request){
+    public void join(JoinRequest request) throws AlreadyTakenException, UnauthorizedException, BadRequestException {
         makeRequest("PUT", "/game", request, null);
     }
 
