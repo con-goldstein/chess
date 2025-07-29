@@ -33,7 +33,7 @@ public class ServerFacade {
         return result;
     }
 
-    public ListResult list(){
+    public ListResult list() throws AlreadyTakenException, UnauthorizedException, BadRequestException {
         return makeRequest("GET", "/game", null, ListResult.class);
     }
 
