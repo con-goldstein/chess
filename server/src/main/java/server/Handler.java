@@ -1,5 +1,8 @@
 package server;
 import dataaccess.*;
+import exceptions.AlreadyTakenException;
+import exceptions.BadRequestException;
+import exceptions.UnauthorizedException;
 import model.*;
 import server.exception.*;
 import service.*;

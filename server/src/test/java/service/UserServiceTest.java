@@ -1,5 +1,9 @@
 package service;
 
+import exceptions.AlreadyTakenException;
+import exceptions.BadRequestException;
+import exceptions.DataAccessException;
+import exceptions.UnauthorizedException;
 import requests.LoginRequest;
 import requests.LogoutRequest;
 import requests.RegisterRequest;
@@ -28,7 +32,7 @@ class UserServiceTest {
 
     @Test
     //create new user
-    public void goodRegisterTest() throws DataAccessException, BadRequestException, AlreadyTakenException{
+    public void goodRegisterTest() throws DataAccessException, BadRequestException, AlreadyTakenException {
         UserService.register(request, user, auth);
     }
 

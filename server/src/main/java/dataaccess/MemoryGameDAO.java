@@ -1,5 +1,6 @@
 package dataaccess;
 
+import exceptions.BadRequestException;
 import results.CreateResult;
 import chess.ChessGame;
 import model.*;
@@ -17,7 +18,7 @@ public class MemoryGameDAO implements GameDAO{
         return gameDatabase;
     }
 
-    public CreateResult createGameData(String gameName) throws BadRequestException{
+    public CreateResult createGameData(String gameName) throws BadRequestException {
         Random random = new Random();
         int gameID = random.nextInt(1000);
         try {

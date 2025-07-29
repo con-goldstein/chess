@@ -1,5 +1,9 @@
 package service;
 import dataaccess.*;
+import exceptions.AlreadyTakenException;
+import exceptions.BadRequestException;
+import exceptions.DataAccessException;
+import exceptions.UnauthorizedException;
 import requests.*;
 import results.*;
 
@@ -7,7 +11,7 @@ import java.util.UUID;
 
 public class UserService {
     public static LoginResult login(LoginRequest loginRequest, UserDAO user, AuthDAO auth)
-            throws BadRequestException, UnauthorizedException, DataAccessException{
+            throws BadRequestException, UnauthorizedException, DataAccessException {
         if (loginRequest.username() == null || loginRequest.password() == null){
             throw new BadRequestException("Missing username or password");
         }

@@ -2,6 +2,8 @@ package dataaccess;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import exceptions.BadRequestException;
+import exceptions.DataAccessException;
 import model.GameData;
 import results.CreateResult;
 import java.util.Random;
@@ -46,7 +48,7 @@ public class SQLGameDAO implements GameDAO{
             return null;
         }
     }
-    public CreateResult createGameData(String gamename) throws BadRequestException{
+    public CreateResult createGameData(String gamename) throws BadRequestException {
         Random random = new Random();
         int gameID = random.nextInt(1000);
         try (var conn = DatabaseManager.getConnection()){

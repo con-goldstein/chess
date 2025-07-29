@@ -1,5 +1,7 @@
 package dataaccess;
 import java.util.*;
+
+import exceptions.DataAccessException;
 import requests.RegisterRequest;
 import model.*;
 

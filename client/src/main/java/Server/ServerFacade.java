@@ -2,9 +2,9 @@ package Server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import dataaccess.AlreadyTakenException;
-import dataaccess.BadRequestException;
-import dataaccess.UnauthorizedException;
+import exceptions.AlreadyTakenException;
+import exceptions.BadRequestException;
+import exceptions.UnauthorizedException;
 import results.*;
 import java.io.*;
 import java.net.*;

@@ -1,5 +1,5 @@
 package dataaccess;
-import model.*;
+import exceptions.DataAccessException;
 import org.mindrot.jbcrypt.BCrypt;
 import requests.RegisterRequest;
 import java.sql.SQLException;

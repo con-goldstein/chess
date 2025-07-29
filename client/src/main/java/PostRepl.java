@@ -1,6 +1,8 @@
-package dataaccess;
-
 import Server.ServerFacade;
+import exceptions.AlreadyTakenException;
+import exceptions.BadRequestException;
+import exceptions.DataAccessException;
+import exceptions.UnauthorizedException;
 import model.GameData;
 import requests.*;
 import results.*;

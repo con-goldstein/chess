@@ -1,6 +1,10 @@
 package service;
 
 
+import exceptions.AlreadyTakenException;
+import exceptions.BadRequestException;
+import exceptions.DataAccessException;
+import exceptions.UnauthorizedException;
 import requests.*;
 import results.CreateResult;
 import results.RegisterResult;
@@ -30,7 +34,7 @@ class GameServiceTest {
     @Test
     //successfuly creates game
     void create() throws BadRequestException, UnauthorizedException, AlreadyTakenException,
-            DataAccessException{
+            DataAccessException {
         RegisterResult result = UserService.register(request, user, auth);
         UserService.login(loginRequest, user, auth);
         String authToken = result.authToken();

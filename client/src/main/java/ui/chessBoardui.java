@@ -12,16 +12,18 @@ public class chessBoardui {
     private static final int boardSize = 8;
     private static final int squareSize = 1;
     private static final int lineWidth = 1;
-    ChessBoard board;
+    static ChessBoard board;
 
 private static final String EMPTY = " ";
-public chessBoardui(){
-    this.board = new ChessGame().getBoard();
+public chessBoardui(ChessBoard board){
+    chessBoardui.board = board != null ? board : new ChessGame().getBoard();
 }
 
 
 public static void main(String[] args) {
     var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+
+    getBoard();
 
     out.print(ERASE_SCREEN);
 
@@ -33,6 +35,19 @@ public static void main(String[] args) {
 
     out.print(SET_BG_COLOR_BLACK);
     out.print(SET_TEXT_COLOR_WHITE);
+}
+
+private static void getBoard(){
+    for (int i=0; i < boardSize; i++){
+        for (int j=0; j < boardSize; j++){
+            ChessPiece piece = board.getPiece(new ChessPosition(i, j));
+            if (piece != null){
+                ChessPiece.PieceType type = piece.getPieceType();
+                var color = piece.getTeamColor();
+
+            }
+        }
+    }
 }
 
     private static void drawHeaders(PrintStream out) {
@@ -70,11 +85,19 @@ public static void main(String[] args) {
     }
 
     private static void drawChessBoard(PrintStream out) {
-
-        for (int boardRow = 0; boardRow < boardSize; ++boardRow) {
-            for (int boardCol = 0; boardCol < boardSize; ++boardCol){
-                drawSquare(out, boardRow, boardCol);
+        for (int boardRow = 0; boardRow < boardSize; boardRow++) {
+            for (int squareRow = 0; squareRow < squareSize; squareRow++){
+                for (int boardCol=0; boardCol < boardSize; boardCol++) {
+                    if (boardRow + boardCol / 2 == 0){setWhite(out);}
+                    else {setBlack(out);
+//                        if (squareRow == squareSize / 2) {
+                            int prefixLength = squareSize / 2;
+                            int suffixLength = 0;
+//                        }
+                    drawSquare(out, boardRow, boardCol);
+                }
             }
+        }
 
             drawRowOfSquares(out);
 

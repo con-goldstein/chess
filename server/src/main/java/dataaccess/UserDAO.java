@@ -1,5 +1,5 @@
 package dataaccess;
-import org.mindrot.jbcrypt.BCrypt;
+import exceptions.DataAccessException;
 import requests.*;
 
 public interface UserDAO{
