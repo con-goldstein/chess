@@ -61,7 +61,7 @@ public class SQLAuthDAO implements AuthDAO{
             preparedStatement.setString(1, authToken);
             preparedStatement.executeUpdate();
         }catch (SQLException e){
-            throw new DataAccessException("unable to connect");
+            throw new DataAccessException("unable to connect to database");
         }
     }
 
