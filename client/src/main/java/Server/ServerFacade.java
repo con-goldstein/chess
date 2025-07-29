@@ -41,8 +41,9 @@ public class ServerFacade {
         return makeRequest("POST", "/game", request, CreateResult.class);
     }
 
-    public void logout(LogoutRequest request){
-        makeRequest("DELETE", "/session", request, null);
+    public boolean logout() throws AlreadyTakenException, UnauthorizedException, BadRequestException {
+        makeRequest("DELETE", "/session", null, null);
+        return true;
     }
 
     public void join(JoinRequest request){
