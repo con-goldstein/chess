@@ -34,7 +34,7 @@ class GameServiceTest {
         RegisterResult result = UserService.register(request, user, auth);
         UserService.login(loginRequest, user, auth);
         String authToken = result.authToken();
-        CreateRequest createRequest = new CreateRequest(authToken, "gamename");
+        CreateRequest createRequest = new CreateRequest(authToken, "gameName");
         GameService.create(createRequest, auth, game);
     }
 
@@ -43,7 +43,7 @@ class GameServiceTest {
         assertThrows(UnauthorizedException.class, () -> {
         RegisterResult result = UserService.register(request, user, auth);
         UserService.login(loginRequest, user, auth);
-        CreateRequest createRequest = new CreateRequest("badToken", "gamename");
+        CreateRequest createRequest = new CreateRequest("badToken", "gameName");
         GameService.create(createRequest, auth, game);
         });
     }
@@ -56,7 +56,7 @@ class GameServiceTest {
         RegisterResult result = UserService.register(request, user, auth);
         UserService.login(loginRequest, user, auth);
         String authToken = result.authToken();
-        CreateRequest createRequest = new CreateRequest(authToken, "gamename");
+        CreateRequest createRequest = new CreateRequest(authToken, "gameName");
         GameService.create(createRequest, auth, game);
         GameService.list(authToken, auth, game);
     }
@@ -67,7 +67,7 @@ class GameServiceTest {
             RegisterResult result = UserService.register(request, user, auth);
             UserService.login(loginRequest, user, auth);
             String authToken = result.authToken();
-            CreateRequest createRequest = new CreateRequest(authToken, "gamename");
+            CreateRequest createRequest = new CreateRequest(authToken, "gameName");
             GameService.create(createRequest, auth, game);
             GameService.list("badToken", auth, game);
         });
@@ -79,7 +79,7 @@ class GameServiceTest {
         RegisterResult result = UserService.register(request, user, auth);
         UserService.login(loginRequest, user, auth);
         String authToken = result.authToken();
-        CreateRequest createRequest = new CreateRequest(authToken, "gamename");
+        CreateRequest createRequest = new CreateRequest(authToken, "gameName");
         CreateResult res = GameService.create(createRequest, auth, game);
         JoinRequest joinRequest = new JoinRequest("WHITE", res.gameID());
         GameService.join(authToken, joinRequest, auth, game);
@@ -91,7 +91,7 @@ class GameServiceTest {
             RegisterResult result = UserService.register(request, user, auth);
             UserService.login(loginRequest, user, auth);
             String authToken = result.authToken();
-            CreateRequest createRequest = new CreateRequest(authToken, "gamename");
+            CreateRequest createRequest = new CreateRequest(authToken, "gameName");
             CreateResult res = GameService.create(createRequest, auth, game);
             JoinRequest joinRequest = new JoinRequest("WRONGCOLOR", res.gameID());
             GameService.join(authToken, joinRequest, auth, game);
@@ -105,7 +105,7 @@ class GameServiceTest {
             RegisterResult result = UserService.register(request, user, auth);
             UserService.login(loginRequest, user, auth);
             String authToken = result.authToken();
-            CreateRequest createRequest = new CreateRequest(authToken, "gamename");
+            CreateRequest createRequest = new CreateRequest(authToken, "gameName");
             CreateResult res = GameService.create(createRequest, auth, game);
             JoinRequest joinRequest = new JoinRequest("White", res.gameID());
             GameService.join(authToken, joinRequest, auth, game);

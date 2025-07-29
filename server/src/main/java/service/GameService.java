@@ -25,10 +25,10 @@ public class GameService {
         if (!foundToken){
             throw new UnauthorizedException("could not find authToken");
         }
-        if ((createRequest.authToken() == null) || (createRequest.gamename() == null)){
-            throw new BadRequestException("authToken or gamename required");
+        if ((createRequest.authToken() == null) || (createRequest.gameName() == null)){
+            throw new BadRequestException("authToken or gameName required");
         }
-        return gameDAO.createGameData(createRequest.gamename());
+        return gameDAO.createGameData(createRequest.gameName());
     }
 
     public static GameData join(String authToken, JoinRequest joinRequest, AuthDAO authDAO, GameDAO gameDAO)

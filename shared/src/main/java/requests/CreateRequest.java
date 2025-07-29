@@ -1,3 +1,3 @@
 package requests;
 
-public record CreateRequest(String authToken, String gamename){}
+public record CreateRequest(String authToken, String gameName){}
