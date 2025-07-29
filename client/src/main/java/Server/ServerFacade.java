@@ -14,8 +14,11 @@ public class ServerFacade {
     }
 
 
-    public RegisterResult register(RegisterRequest request) {
-        return makeRequest("POST", "/user", request, RegisterResult.class);
+    public RegisterResult register(RegisterRequest request) throws AlreadyTakenException, UnauthorizedException, BadRequestException {
+        RegisterResult result = makeRequest("POST", "/user", request, RegisterResult.class);
+        authToken = result.authToken();
+        username = result.username();
+        return result;
     }
 
     public LoginResult login(LoginRequest request) {
