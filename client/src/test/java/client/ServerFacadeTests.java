@@ -141,7 +141,22 @@ public class ServerFacadeTests {
         });
         }
 
-        @Test public void goodJoinTest(){
+        @Test public void goodJoinTest() throws UnauthorizedException, BadRequestException, AlreadyTakenException {
+            facade.register(new RegisterRequest("username","password", "email"));
+            facade.login(new LoginRequest("username", "password"));
+            CreateResult result = facade.create("gameName");
+            facade.join(new JoinRequest("WHITE", result.gameID()));
+            ListResult listResult = facade.list();
+            HashSet<GameData> games = listResult.games();
+            for (GameData game : games){
+                assertEquals("username", game.whiteUsername());
+            }
+        }
 
+        @Test public void badJoinTest() throws UnauthorizedException, BadRequestException, AlreadyTakenException {
+            facade.register(new RegisterRequest("username","password", "email"));
+            facade.login(new LoginRequest("username", "password"));
+            CreateResult result = facade.create("gameName");
+            assertThrows(BadRequestException.class, () -> {facade.join(new JoinRequest("color", result.gameID()));});
         }
 }
