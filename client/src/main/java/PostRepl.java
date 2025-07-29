@@ -1,4 +1,4 @@
-import Server.ServerFacade;
+import server.ServerFacade;
 import exceptions.AlreadyTakenException;
 import exceptions.BadRequestException;
 import exceptions.DataAccessException;
@@ -50,77 +50,93 @@ public void postEval() throws BadRequestException, AlreadyTakenException,
                         repl.loggedIn = false;
                         return;
                 case "create":
-                    if (splitResult.length == 2) {
-                        try {
-                            CreateResult createResult = server.create(splitResult[1]);
-                            System.out.println("Game created with id " + createResult.gameID());
-                            break;
-                        } catch (BadRequestException e) {
-                            throw new BadRequestException("Could not create game");
-                        }
-                    }
-                    else {
-                        throw new BadRequestException("Please provide gameName to create");
-                    }
+                    createGame(splitResult, server);
+                    break;
                 case "list":
                     listGames(server, gamesMap);
                     break;
-
                 case "join":
-                    try {
-                        if (inGame){
-                            System.out.println("You are already playing, please first finish your game to join another");
-                            break;
-                        }
-                        if (splitResult.length == 3) {
-                            int gameNumber = Integer.parseInt(splitResult[1]);
-                            //goes into the map and gets the gameID from the listed number
-                            if (gamesMap.containsKey(gameNumber)) {
-                                int gameID = gamesMap.get(gameNumber).gameID();
-                                server.join(new JoinRequest(splitResult[2], gameID));
-                                System.out.println("Game joined as " + splitResult[2]);
-                                inGame = true;
-                                break;
-                            } else {
-                                System.out.println("game not found, please try again");
-                            }
-                        }
-                        else{
-                            System.out.println("Please provide valid player color and game ID to join");
-                        }
-                    }catch (NumberFormatException e){
-                        System.out.println("Invalid game number: must be an integer.");
-                        }
-                    catch (AlreadyTakenException e){throw new AlreadyTakenException("that color is already taken, " +
-                            "please choose another color/game");}
+                    joinGame(splitResult, server, gamesMap, inGame);
                     break;
-
                 case "observe":
-                    if (splitResult.length == 2) {
-                        try {
-                            int gameNumber = Integer.parseInt(splitResult[1]);
-                            if (gamesMap.containsKey(gameNumber)) {
-                                int gameID = gamesMap.get(gameNumber).gameID();
-                                System.out.println("game is observable with gameID " + gameID);
-                                //call observe function?
-                                break;
-                            }
-                            else {
-                                System.out.println("Game not found, choose another to observe");
-                            }
-                        }catch(NumberFormatException e){
-                            System.out.println("Invalid game number, please enter a number");
-                        }
-                    }
-                    else {
-                        System.out.println("Please provide gameName after keyword observe");
-                    }
+                    observeGame(splitResult, gamesMap);
                     break;
             }
     }
 }
 
-public static void listGames(ServerFacade server, HashMap<Integer, GameData> gamesMap){
+public static void observeGame(String[] splitResult, HashMap<Integer, GameData> gamesMap){
+    if (splitResult.length == 2) {
+        try {
+            int gameNumber = Integer.parseInt(splitResult[1]);
+            if (gamesMap.containsKey(gameNumber)) {
+                int gameID = gamesMap.get(gameNumber).gameID();
+                System.out.println("game is observable with gameID " + gameID);
+                //call observe UI?
+                return;
+            }
+            else {
+                System.out.println("Game not found, choose another to observe");
+            }
+        }catch(NumberFormatException e){
+            System.out.println("Invalid game number, please enter a number");
+        }
+    }
+    else {
+        System.out.println("Please provide gameName after keyword observe");
+    }
+}
+
+public static void createGame(String[] splitResult, ServerFacade server) throws BadRequestException {
+    if (splitResult.length == 2) {
+        try {
+            CreateResult createResult = server.create(splitResult[1]);
+            System.out.println("Game created with id " + createResult.gameID());
+        } catch (BadRequestException | AlreadyTakenException | UnauthorizedException e) {
+            throw new BadRequestException("Could not create game");
+        }
+    }
+    else {
+        throw new BadRequestException("Please provide gameName to create");
+    }
+}
+
+public static void joinGame(String[] splitResult, ServerFacade server, HashMap<Integer, GameData> gamesMap,
+                            boolean inGame) throws AlreadyTakenException {
+    try {
+        if (inGame){
+            System.out.println("You are already playing, please first finish your game to join another");
+            return;
+        }
+        if (splitResult.length == 3) {
+            int gameNumber = Integer.parseInt(splitResult[1]);
+            if (!splitResult[2].equals("WHITE") && !splitResult[2].equals("BLACK")) {
+                throw new BadRequestException("Please enter either WHITE or BLACK as color");
+            }
+            //goes into the map and gets the gameID from the listed number
+            if (gamesMap.containsKey(gameNumber)) {
+                int gameID = gamesMap.get(gameNumber).gameID();
+                server.join(new JoinRequest(splitResult[2], gameID));
+                System.out.println("Game joined as " + splitResult[2]);
+                inGame = true;
+            } else {
+                System.out.println("game not found, please try again");
+            }
+        }
+        else{
+            System.out.println("Please provide valid player color and game ID to join");
+        }
+    }catch (NumberFormatException e) {
+        System.out.println("Invalid game number: must be an integer.");
+    } catch (UnauthorizedException e) {
+        System.out.println("You are not authorized to join this game.");
+    } catch (BadRequestException e) {
+        System.out.println("Bad request: " + e.getMessage());
+    }
+}
+
+public static void listGames(ServerFacade server, HashMap<Integer, GameData> gamesMap)
+        throws BadRequestException, AlreadyTakenException {
     try{
     ListResult listResult = server.list();
     HashSet<GameData> games = listResult.games();
@@ -135,8 +151,13 @@ public static void listGames(ServerFacade server, HashMap<Integer, GameData> gam
     }
     else{System.out.println("No games to list. Please create game to add to database");}
 
-} catch (Exception e) {
-    throw new RuntimeException(e);
-}}
+} catch (UnauthorizedException e) {
+        System.out.println("Unauthorized: You need to log in first.");
+    } catch (BadRequestException e) {
+        throw new BadRequestException(e.getMessage());
+    } catch (AlreadyTakenException e) {
+        throw new AlreadyTakenException(e.getMessage());
+    }
+}
 
 }
