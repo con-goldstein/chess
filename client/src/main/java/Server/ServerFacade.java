@@ -1,6 +1,10 @@
 package Server;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import dataaccess.AlreadyTakenException;
+import dataaccess.BadRequestException;
+import dataaccess.UnauthorizedException;
 import results.*;
 import java.io.*;
 import java.net.*;
@@ -8,6 +12,8 @@ import requests.*;
 
 public class ServerFacade {
     String serverurl;
+    public String authToken;
+    public String username;
 
     public ServerFacade(String url) {
         serverurl = url;
@@ -21,8 +27,10 @@ public class ServerFacade {
         return result;
     }
 
-    public LoginResult login(LoginRequest request) {
-        return makeRequest("POST", "/sesion", request, LoginResult.class);
+    public LoginResult login(LoginRequest request) throws AlreadyTakenException, UnauthorizedException, BadRequestException {
+        LoginResult result = makeRequest("POST", "/session", request, LoginResult.class);
+        authToken = result.authToken();
+        return result;
     }
 
     public ListResult list(){
