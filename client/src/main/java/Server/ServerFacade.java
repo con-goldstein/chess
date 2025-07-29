@@ -37,8 +37,8 @@ public class ServerFacade {
         return makeRequest("GET", "/game", null, ListResult.class);
     }
 
-    public CreateResult create(CreateRequest request){
-        return makeRequest("POST", "/game", request, CreateResult.class);
+    public CreateResult create(String gameName) throws AlreadyTakenException, BadRequestException, UnauthorizedException {
+        return makeRequest("POST", "/game", new CreateRequest(authToken, gameName), CreateResult.class);
     }
 
     public boolean logout() throws AlreadyTakenException, UnauthorizedException, BadRequestException {
