@@ -1,5 +1,6 @@
+package dataaccess;
+
 import Server.ServerFacade;
-import dataaccess.*;
 import requests.*;
 
 public class PreRepl {

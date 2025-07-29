@@ -1,8 +1,6 @@
+package dataaccess;
+
 import Server.ServerFacade;
-import dataaccess.AlreadyTakenException;
-import dataaccess.BadRequestException;
-import dataaccess.DataAccessException;
-import dataaccess.UnauthorizedException;
 
 import java.util.Scanner;
 
@@ -11,7 +9,7 @@ import static ui.EscapeSequences.*;
 public class Repl {
     PreRepl preRepl;
     ServerFacade server;
-    boolean loggedIn;
+    public boolean loggedIn;
     public final Scanner scanner = new Scanner(System.in);
 
     public Repl(){

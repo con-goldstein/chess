@@ -1,13 +1,10 @@
+package dataaccess;
+
 import Server.ServerFacade;
-import dataaccess.AlreadyTakenException;
-import dataaccess.BadRequestException;
-import dataaccess.DataAccessException;
-import dataaccess.UnauthorizedException;
 import model.GameData;
 import requests.*;
 import results.*;
 
-import javax.xml.crypto.Data;
 import java.util.*;
 
 import static ui.EscapeSequences.RESET_TEXT_BOLD_FAINT;
