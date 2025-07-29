@@ -68,9 +68,7 @@ public class Handler {
     public Object logout(Request req, Response res){
         String authToken = req.headers("authorization");
         try{
-            //returns "{}"
             UserService.logout(new LogoutRequest(authToken), authDAO);
-            System.out.println("response status: " + res.status());
             return "{}";
         }
         catch (UnauthorizedException e) {
