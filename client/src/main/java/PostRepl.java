@@ -1,3 +1,4 @@
+import chess.ChessGame;
 import server.ServerFacade;
 import exceptions.AlreadyTakenException;
 import exceptions.BadRequestException;
@@ -6,6 +7,7 @@ import exceptions.UnauthorizedException;
 import model.GameData;
 import requests.*;
 import results.*;
+import ui.ChessBoardUI;
 
 import java.util.*;
 
@@ -72,8 +74,9 @@ public static void observeGame(String[] splitResult, HashMap<Integer, GameData> 
             if (gamesMap.containsKey(gameNumber)) {
                 int gameID = gamesMap.get(gameNumber).gameID();
                 System.out.println("game is observable with gameID " + gameID);
-                //call observe UI?
-                return;
+                ChessGame game = gamesMap.get(gameNumber).game();
+                ChessBoardUI chessBoard = new ChessBoardUI(game.getBoard());
+                chessBoard.run("WHITE");
             }
             else {
                 System.out.println("Game not found, choose another to observe");
@@ -118,6 +121,11 @@ public static void joinGame(String[] splitResult, ServerFacade server, HashMap<I
                 int gameID = gamesMap.get(gameNumber).gameID();
                 server.join(new JoinRequest(splitResult[2], gameID));
                 System.out.println("Game joined as " + splitResult[2]);
+
+                //get and print out ChessBoard
+                ChessGame game = gamesMap.get(gameNumber).game();
+                ChessBoardUI chessBoard = new ChessBoardUI(game.getBoard());
+                chessBoard.run(splitResult[2]);
                 inGame = true;
             } else {
                 System.out.println("game not found, please try again");
@@ -143,7 +151,7 @@ public static void listGames(ServerFacade server, HashMap<Integer, GameData> gam
     if (!games.isEmpty()){
         int counter = 1;
         for (GameData game : games) {
-            System.out.printf("%d: gameName = %s, whiteUsername = %s, blackUsername = %s\n",
+            System.out.printf("%d: %s, whiteUsername = %s, blackUsername = %s\n",
                     counter, game.gameName(), game.whiteUsername(), game.blackUsername());
             gamesMap.put(counter, game);
             counter += 1;
