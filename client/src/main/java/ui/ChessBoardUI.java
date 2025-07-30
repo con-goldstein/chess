@@ -8,14 +8,9 @@ import java.nio.charset.StandardCharsets;
 import static ui.EscapeSequences.*;
 
 public class ChessBoardUI {
-    //board dimension
-    private static final int BOARD_SIZE = 9;
-    private static final int SQUARE_SIZE = 1;
-    private static final int LINE_WIDTH = 1;
     private final ChessBoard board;
     public static boolean whitePlayer;
 
-private static final String EMPTY = " ";
 public ChessBoardUI(ChessBoard board){
     this.board = (board != null) ? board : new ChessGame().getBoard();
 }
@@ -53,7 +48,6 @@ public void run(String color){
         }
         else {
             headers = new String[]{"  h  ", "  g  ", "  f  ", "  e  ", "  d  ", "  c  ", "  b  ", "  a  "};
-
         }
         for (String header : headers) {
             drawHeader(out, header);
@@ -63,13 +57,9 @@ public void run(String color){
     }
 
     private static void drawHeader(PrintStream out, String headerText) {
-    out.print(SET_BG_COLOR_DARK_GREY);
-    printHeaderText(out, headerText);
-    }
-
-    private static void printHeaderText(PrintStream out, String player) {
+        out.print(SET_BG_COLOR_DARK_GREY);
         out.print(SET_TEXT_COLOR_MAGENTA);
-        out.print(player);
+        out.print(headerText);
     }
 
     private void drawChessBoard(PrintStream out) {
@@ -91,11 +81,17 @@ public void run(String color){
     }
     }
 
-    private void drawRowOfSquares(PrintStream out, int boardRow){
-            for (int boardCol = 1; boardCol < BOARD_SIZE; boardCol++) {
+    private void drawRowOfSquares(PrintStream out, int boardRow) {
+        if (whitePlayer) {
+            for (int boardCol = 1; boardCol <= 8; boardCol++) {
+                drawSquare(out, boardRow, boardCol);
+            }
+        } else {
+            for (int boardCol = 8; boardCol >= 1; boardCol--) {
                 drawSquare(out, boardRow, boardCol);
             }
         }
+    }
 
 
     private void drawSquare(PrintStream out, int row, int col){
@@ -143,18 +139,6 @@ public void run(String color){
     }
 
 
-    private void printPlayer(PrintStream out, String symbol) {
-        //if white, set text to black
-        //if black, set text to white
-//            if (whitePlayer) {
-//                out.print(SET_TEXT_COLOR_WHITE);
-//            } else {
-//                out.print(SET_TEXT_COLOR_BLACK);
-//        }
-
-        out.print(" " + symbol + " ");
-    }
-
     private void drawColumnHeader(PrintStream out, int boardRow){
         out.print(SET_BG_COLOR_DARK_GREY);
         String symbol;
@@ -166,8 +150,4 @@ public void run(String color){
         }
         out.print(SET_TEXT_COLOR_MAGENTA + " " + symbol + " " + RESET_TEXT_COLOR);
     }
-
-
-
-
 }
