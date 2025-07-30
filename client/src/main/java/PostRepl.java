@@ -73,7 +73,7 @@ public static void observeGame(String[] splitResult, HashMap<Integer, GameData> 
             int gameNumber = Integer.parseInt(splitResult[1]);
             if (gamesMap.containsKey(gameNumber)) {
                 int gameID = gamesMap.get(gameNumber).gameID();
-                System.out.println("game is observable with gameID " + gameID);
+                System.out.println("game is observable");
                 ChessGame game = gamesMap.get(gameNumber).game();
                 ChessBoardUI chessBoard = new ChessBoardUI(game.getBoard());
                 chessBoard.run("WHITE");
@@ -94,7 +94,7 @@ public static void createGame(String[] splitResult, ServerFacade server) throws 
     if (splitResult.length == 2) {
         try {
             CreateResult createResult = server.create(splitResult[1]);
-            System.out.println("Game created with id " + createResult.gameID());
+            System.out.println("Game created");
         } catch (BadRequestException | AlreadyTakenException | UnauthorizedException e) {
             throw new BadRequestException("Could not create game");
         }
