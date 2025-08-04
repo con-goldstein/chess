@@ -63,6 +63,8 @@ public void postEval() throws BadRequestException, AlreadyTakenException,
                 case "observe":
                     observeGame(splitResult, gamesMap);
                     break;
+                default:
+                    System.out.println("Please input valid action");
             }
     }
 }
