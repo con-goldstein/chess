@@ -30,8 +30,6 @@ public class Handler {
     }
 
 
-
-
     public Object login(Request req, Response res) {
         res.type("application/json");
         var serializer = new Gson();
@@ -148,6 +146,9 @@ public class Handler {
             return "{ \"message\": \"Error:\" }";
         }
     }
+
+    public AuthDAO getAuthDAO(){return authDAO;}
+    public GameDAO getGameDAO(){return gameDAO;}
 
     public record GameRequest(String gameName){}
 }
