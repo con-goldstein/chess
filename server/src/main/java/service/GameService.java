@@ -77,7 +77,7 @@ public class GameService {
         throw new BadRequestException("idk");
     }
 
-    private static GameData findGame(int gameID, GameDAO gameDAO) throws DataAccessException{
+    public static GameData findGame(int gameID, GameDAO gameDAO) throws DataAccessException{
         for (GameData game : gameDAO.findGames()){
             if (game.gameID() == gameID){
                 return game;
