@@ -75,4 +75,8 @@ public void broadcastToAll(String message, int gameID) throws IOException {
         }
     }
 }
+
+public void remove(int gameID, String username, Session session){
+    connections.get(gameID).remove(new Connection(username, session));
+}
 }
