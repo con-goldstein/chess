@@ -1,13 +1,10 @@
 import chess.*;
 import com.google.gson.Gson;
-import dataaccess.*;
 import exceptions.DataAccessException;
 import model.*;
-import org.eclipse.jetty.server.Authentication;
 import ui.ChessBoardUI;
 import websocket.ServerMessageObserver;
 import websocket.WebSocketFacade;
-import websocket.commands.UserGameCommand;
 import websocket.messages.*;
 
 import java.io.IOException;
