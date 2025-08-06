@@ -6,6 +6,7 @@ import model.*;
 import org.eclipse.jetty.server.Authentication;
 import ui.ChessBoardUI;
 import websocket.ServerMessageObserver;
+import websocket.WebSocketFacade;
 import websocket.commands.UserGameCommand;
 import websocket.messages.*;
 
@@ -22,20 +23,16 @@ public class InGame implements ServerMessageObserver {
     websocket.WebSocketFacade ws;
     GameData gameData;
     ChessGame game;
-    GameDAO gameDAO;
-    AuthDAO authDAO;
 
-//    public InGame(HashMap<Integer, GameData> gamesMap) {
-//    }
+    public InGame() throws Exception {
+        ws = new WebSocketFacade(this);
+    }
 
 
-    public void run(HashMap<Integer, GameData> gamesMap, String[] splitResult, String authToken) throws IOException, DataAccessException {
+    public void run(HashMap<Integer, GameData> gamesMap, String[] splitResult, String authToken, String username) throws IOException, DataAccessException {
         int gameID = parseInt(splitResult[1]);
         GameData game = gamesMap.get(gameID);
         String action = splitResult[0];
-
-        String username = authDAO.getauthData(authToken).username();
-
         //connect to server
         ws.connectToServer(authToken, gameID);
 
@@ -118,5 +115,9 @@ public class InGame implements ServerMessageObserver {
                 LoadGameMessage loadGameMessage = new Gson().fromJson(message, LoadGameMessage.class);
                 System.out.println(loadGameMessage.toString());
         }
+    }
+
+    public ChessPiece getPiece(String result){
+
     }
 }

@@ -1,3 +1,4 @@
+import websocket.WebSocketFacade;
 import chess.ChessGame;
 import server.ServerFacade;
 import exceptions.AlreadyTakenException;
@@ -9,25 +10,27 @@ import requests.*;
 import results.*;
 import ui.ChessBoardUI;
 
+import java.io.IOException;
 import java.util.*;
 
 import static ui.EscapeSequences.*;
 
-public class PostRepl {
+public class PostRepl{
 ServerFacade server;
 PreRepl preRepl;
 HashMap<Integer, GameData> gamesMap = new HashMap<>();
 Repl repl;
+InGame inGameClient;
 public boolean inGame = false;
-
 public PostRepl(ServerFacade serverFacade, PreRepl preRepl, Repl repl){
     this.server = serverFacade;
     this.preRepl = preRepl;
     this.repl = repl;
+//    inGameClient = new InGame(gamesMap);
 }
 
-public void postEval() throws BadRequestException, AlreadyTakenException,
-        UnauthorizedException, DataAccessException {
+public void postEval(String username) throws BadRequestException, AlreadyTakenException,
+        UnauthorizedException, DataAccessException, IOException {
     String helpLine = "create <Name> - a game\n" +
             "list - game\njoin <ID> [WHITE/BLACK] - a game\nobserve <ID> - a game\nlogout- when you are done\n" +
             "quit - playing chess\nhelp - with possible commands";
@@ -59,9 +62,11 @@ public void postEval() throws BadRequestException, AlreadyTakenException,
                     break;
                 case "join":
                     joinGame(splitResult, server, gamesMap, inGame);
+                    inGameClient.run(gamesMap, splitResult, server.authToken, username);
                     break;
                 case "observe":
                     observeGame(splitResult, gamesMap);
+                    inGameClient.run(gamesMap, splitResult, server.authToken, username);
                     break;
                 default:
                     System.out.println("Please input valid action");
@@ -74,7 +79,7 @@ public static void observeGame(String[] splitResult, HashMap<Integer, GameData> 
         try {
             int gameNumber = Integer.parseInt(splitResult[1]);
             if (gamesMap.containsKey(gameNumber)) {
-                int gameID = gamesMap.get(gameNumber).gameID();
+                gamesMap.get(gameNumber).gameID();
                 System.out.println("game is observable");
                 ChessGame game = gamesMap.get(gameNumber).game();
                 ChessBoardUI chessBoard = new ChessBoardUI(game.getBoard());

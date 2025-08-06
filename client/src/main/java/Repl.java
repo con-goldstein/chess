@@ -3,12 +3,15 @@ import exceptions.AlreadyTakenException;
 import exceptions.BadRequestException;
 import exceptions.DataAccessException;
 import exceptions.UnauthorizedException;
+import websocket.ServerMessageObserver;
+import websocket.messages.ServerMessage;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 
-public class Repl {
+public class Repl implements ServerMessageObserver {
     PreRepl preRepl;
     ServerFacade server;
     public boolean loggedIn;
@@ -40,7 +43,7 @@ public void run() {
         }
         try {
             preRepl.eval(result);
-        } catch (AlreadyTakenException | UnauthorizedException | BadRequestException | DataAccessException e) {
+        } catch (AlreadyTakenException | UnauthorizedException | BadRequestException | DataAccessException | IOException e) {
             System.out.println(e.getMessage());
         }
         System.out.print(SET_TEXT_COLOR_GREEN + "Input action >>> " + RESET_TEXT_COLOR);
@@ -48,5 +51,7 @@ public void run() {
     }
     System.out.println("Thanks for playing chess");
 }
+
+public void notify(String serverMessage){}
 //done
 }
