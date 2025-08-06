@@ -26,7 +26,8 @@ public class InGame implements ServerMessageObserver {
     }
 
 
-    public void run(HashMap<Integer, GameData> gamesMap, String[] splitResult, String authToken, String username) throws IOException, DataAccessException {
+    public void run(HashMap<Integer, GameData> gamesMap, String[] splitResult, String authToken, String username)
+            throws IOException, DataAccessException {
         int gameID = parseInt(splitResult[1]);
         GameData game = gamesMap.get(gameID);
         String action = splitResult[0];
