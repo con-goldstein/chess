@@ -102,14 +102,10 @@ public class ChessGame {
             //check if there is a piece & if it is the correct turn
             if (piece != null && currentTeam == piece.getTeamColor()) {
                 Collection<ChessMove> validMoves = validMoves(startPosition);
-                if (validMoves.stream().anyMatch(validMove -> validMove.getEndPosition().equals(endPosition))) {
+                if (isMoveValid(endPosition, validMoves)) {
                     handlePawnPromotion(piece, endPosition, currentTeam, row, promotionPiece);
                     //change original position to null
                     chessBoard.addPiece(startPosition, null);
-//
-//                    //check for checkmate/stalemate
-//                    boolean checkmate = isInCheckmate(currentTeam);
-//                    boolean stalemate = isInStalemate(currentTeam);
 
                         //change team color
                     if (currentTeam == teamColor.WHITE) {
@@ -117,7 +113,8 @@ public class ChessGame {
                     } else {
                         setTeamTurn((teamColor.WHITE));
                     }
-                } else {
+                }
+                else {
                     throw new InvalidMoveException("Invalid move");
                 }
             }
@@ -268,6 +265,16 @@ public class ChessGame {
         }
         //comment
         return allValidMoves;
+    }
+
+    private boolean isMoveValid(ChessPosition endPos, Collection<ChessMove> validMoves) {
+        for (ChessMove move : validMoves){
+            ChessPosition endPosition = move.getEndPosition();
+            if (endPos.equals(endPosition)){
+                return true;
+            }
+        }
+        return false;
     }
 
 
