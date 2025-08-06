@@ -77,8 +77,8 @@ public class WebSocketHandler {
                 switch (command.getCommandType()){
                     case CONNECT -> connect(username, gameID, game);
                     case MAKE_MOVE -> makeMove(msg, gameID, username);
-                    case LEAVE -> leaveGame();
-                    case RESIGN -> resign();
+                    case RESIGN -> resign(username, gameID, game);
+                    case LEAVE -> leaveGame(username, game, gameID, session);
                     default -> System.out.println("for show until functions are made");
                 }
             }
@@ -216,6 +216,31 @@ public class WebSocketHandler {
 
     public void leaveGame(){}
     public void resign(){}
+    public void resign(String username, int gameID, GameData game) throws IOException, DataAccessException {
+        if ((game.whiteUsername() == null) | (game.blackUsername() == null)){
+            ErrorMessage newErrorMessage = new ErrorMessage("Error: game is over");
+            connections.broadcastToUser(newErrorMessage.toString(), gameID, username);
+            return;
+        }
+        //updating game
+        if (username.equals(game.whiteUsername())){
+            GameData newGame = new GameData(game.gameID(), null, game.blackUsername(), game.gameName(), game.game());
+            gameDAO.addGame(newGame);
+        }
+        else if (username.equals(game.blackUsername())){
+            GameData newGame = new GameData(game.gameID(), game.whiteUsername(), null, game.gameName(), game.game());
+            gameDAO.addGame(newGame);
+        }
+        else{
+            ErrorMessage errorMessage = new ErrorMessage("Error: you are an observer, and do not have the ability to resign");
+            connections.broadcastToUser(errorMessage.toString(), gameID, username);
+            return;
+        }
+        //send notification message
+        String message = String.format("%s has resigned", username);
+        NotificationMessage notificationMessage = new NotificationMessage(message);
+        connections.broadcastToAll(notificationMessage.toString(), gameID);
+    }
 
 
     public String getUsername(String authToken) throws DataAccessException, IOException {
