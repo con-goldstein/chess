@@ -3,7 +3,7 @@ package server;
 import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import spark.*;
-import WebSocket.WebSocketHandler;
+import websocket.WebSocketHandler;
 
 public class Server {
     public Server(){}

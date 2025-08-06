@@ -1,4 +1,4 @@
-package WebSocket;
+package websocket;
 
 import chess.*;
 import model.AuthData;
@@ -7,14 +7,11 @@ import org.eclipse.jetty.websocket.api.Session;
 import dataaccess.*;
 import exceptions.DataAccessException;
 import org.eclipse.jetty.websocket.api.annotations.*;
-import server.Server;
 import service.GameService;
 import websocket.commands.*;
 import com.google.gson.Gson;
 import websocket.messages.*;
-import websocket.messages.ServerMessage;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Objects;
