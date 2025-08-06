@@ -126,6 +126,11 @@ public class WebSocketHandler {
         ChessGame.TeamColor teamColor = game.getTeamTurn();
         ChessGame.TeamColor pieceColor = board.getPiece(move.getStartPosition()).getTeamColor();
 
+        if ((gameData.whiteUsername() == null) | (gameData.blackUsername() == null)){
+            ErrorMessage newErrorMessage = new ErrorMessage("Error: game is over");
+            connections.broadcastToUser(newErrorMessage.toString(), gameID, username);
+            return;
+        }
         //check if correct user is making move
         if (teamColor.equals(ChessGame.TeamColor.WHITE)){
             if (!Objects.equals(username, gameData.whiteUsername())){
@@ -214,8 +219,21 @@ public class WebSocketHandler {
         return false;
     }
 
-    public void leaveGame(){}
-    public void resign(){}
+    public void leaveGame(String username, GameData game, int gameID, Session session) throws DataAccessException, IOException {
+        //mark the game as over
+        if (username.equals(game.whiteUsername())){
+            GameData newGame = new GameData(game.gameID(), null, game.blackUsername(), game.gameName(), game.game());
+            gameDAO.addGame(newGame);
+        }
+        else if (username.equals(game.blackUsername())){
+            GameData newGame = new GameData(game.gameID(), game.whiteUsername(), null, game.gameName(), game.game());
+            gameDAO.addGame(newGame);
+        }
+        connections.remove(gameID, username, session);
+        String message = String.format("%s has left the game", username);
+        NotificationMessage notificationMessage = new NotificationMessage(message);
+        connections.broadcastNotToUser(notificationMessage.toString(), gameID, username);
+    }
     public void resign(String username, int gameID, GameData game) throws IOException, DataAccessException {
         if ((game.whiteUsername() == null) | (game.blackUsername() == null)){
             ErrorMessage newErrorMessage = new ErrorMessage("Error: game is over");
