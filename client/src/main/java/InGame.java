@@ -117,7 +117,7 @@ public class InGame implements ServerMessageObserver {
         }
     }
 
-    public ChessPiece getPiece(String result){
-
-    }
+//    public ChessPiece getPiece(String result){
+//
+//    }
 }
