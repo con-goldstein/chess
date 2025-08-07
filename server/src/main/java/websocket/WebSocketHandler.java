@@ -62,10 +62,11 @@ public class WebSocketHandler {
                 connections.saveSession(gameID, new Connection(username, session));
                 String authToken = command.getAuthToken();
 
+
                 //authenticate authToken & gameID
                 try{
                     authDAO.getauthData(authToken);
-                    GameService.findGame(gameID, gameDAO);
+                    GameData gameData = GameService.findGame(gameID, gameDAO);
                 } catch (DataAccessException e){
                     ErrorMessage errmsg = new ErrorMessage("error: Invalid authToken or gameDAO");
                     connections.broadcastToUser(errmsg.toString(), gameID, username);
@@ -91,10 +92,10 @@ public class WebSocketHandler {
 
         //if username == whiteUsername, user joined as white
         String string = "";
-        if (game.whiteUsername().equals(username)){
+        if (username.equals(game.whiteUsername())){
             string += "WHITE";
         }
-        else if (game.blackUsername().equals(username)){
+        else if (username.equals(game.blackUsername())){
             string += "BLACK";
         }
         //if none of them, user joined as an observer
@@ -124,7 +125,7 @@ public class WebSocketHandler {
         ChessGame.TeamColor pieceColor = board.getPiece(move.getStartPosition()).getTeamColor();
 
         if ((gameData.whiteUsername() == null) | (gameData.blackUsername() == null)){
-            ErrorMessage newErrorMessage = new ErrorMessage("Error: game is over");
+            ErrorMessage newErrorMessage = new ErrorMessage("Error: Wait for both players to join before making an action");
             connections.broadcastToUser(newErrorMessage.toString(), gameID, username);
             return;
         }
@@ -196,11 +197,13 @@ public class WebSocketHandler {
                 checkMsg += "Player is in checkmate";
                 NotificationMessage notifMessage = new NotificationMessage(checkMsg);
                 connections.broadcastToAll(notifMessage.toString(), gameID);
+                game.setGameOver(true);
             }
             if (game.isInStalemate(game.getTeamTurn())) {
                 checkMsg += "Player is in stalemate";
                 NotificationMessage notifMessage = new NotificationMessage(checkMsg);
                 connections.broadcastToAll(notifMessage.toString(), gameID);
+                game.setGameOver(true);
             }
 
         }
@@ -217,7 +220,7 @@ public class WebSocketHandler {
     }
 
     public void leaveGame(String username, GameData game, int gameID, Session session) throws DataAccessException, IOException {
-        //mark the game as over
+
         if (username.equals(game.whiteUsername())){
             GameData newGame = new GameData(game.gameID(), null, game.blackUsername(), game.gameName(), game.game());
             gameDAO.addGame(newGame);
@@ -232,12 +235,13 @@ public class WebSocketHandler {
         connections.broadcastNotToUser(notificationMessage.toString(), gameID, username);
     }
     public void resign(String username, int gameID, GameData game) throws IOException, DataAccessException {
-        if ((game.whiteUsername() == null) | (game.blackUsername() == null)){
+        if (game.game().gameOver()){
             ErrorMessage newErrorMessage = new ErrorMessage("Error: game is over");
             connections.broadcastToUser(newErrorMessage.toString(), gameID, username);
             return;
         }
         //updating game
+        game.game().setGameOver(true);
         if (username.equals(game.whiteUsername())){
             GameData newGame = new GameData(game.gameID(), null, game.blackUsername(), game.gameName(), game.game());
             gameDAO.addGame(newGame);
@@ -251,6 +255,7 @@ public class WebSocketHandler {
             connections.broadcastToUser(errorMessage.toString(), gameID, username);
             return;
         }
+//        mark game as over
         //send notification message
         String message = String.format("%s has resigned", username);
         NotificationMessage notificationMessage = new NotificationMessage(message);
