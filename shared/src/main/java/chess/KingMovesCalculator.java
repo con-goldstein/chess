@@ -49,7 +49,7 @@ public class KingMovesCalculator implements PieceMovesCalculator {
     public Collection<ChessMove> left(ChessPosition startposition, int row, int col, ChessBoard board,
                                       ChessGame.TeamColor teamColor){
         Collection<ChessMove> moves = new ArrayList<>();
-        if (row  + 1 < 8 ){
+        if (row  + 1 <= 8 ){
             row += 1;
         }
         return addToBoard(row, col, teamColor, startposition, moves, board);

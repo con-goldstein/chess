@@ -32,7 +32,7 @@ public void run(String color){
     else{
         whitePlayer = false;}
 
-    out.print(ERASE_SCREEN);
+    out.println();
 
     drawHeaders(out);
 

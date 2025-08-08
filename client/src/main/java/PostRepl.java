@@ -81,7 +81,7 @@ public static Integer observeGame(String[] splitResult, HashMap<Integer, GameDat
             int gameNumber = Integer.parseInt(splitResult[1]);
             if (gamesMap.containsKey(gameNumber)) {
                 int gameID = gamesMap.get(gameNumber).gameID();
-                System.out.println("game is observable");
+//                System.out.println("game is observable");
                 ChessGame game = gamesMap.get(gameNumber).game();
                 ChessBoardUI chessBoard = new ChessBoardUI(game.getBoard());
                 chessBoard.run("WHITE");

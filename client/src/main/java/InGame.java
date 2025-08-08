@@ -59,7 +59,6 @@ public class InGame implements ServerMessageObserver {
             System.out.println(RESET_TEXT_COLOR + helpLine);
             while (true) {
                 try {
-                    System.out.flush();
                     System.out.print(SET_TEXT_COLOR_GREEN + ">>> " + RESET_TEXT_COLOR);
                     String[] result = scanner.nextLine().split(" ");
                     String keyword = result[0];
@@ -165,6 +164,7 @@ public class InGame implements ServerMessageObserver {
                     else {boardUI.run("BLACK");}
                     break;
             }
+            System.out.print(SET_TEXT_COLOR_GREEN + ">>>");
         } catch (JsonSyntaxException e) {
             System.out.println(e.getMessage());
         }

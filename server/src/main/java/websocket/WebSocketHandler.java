@@ -21,6 +21,7 @@ public class WebSocketHandler {
     private final ConnectionManager connections = new ConnectionManager();
     AuthDAO authDAO;
     GameDAO gameDAO;
+    GameData gameData;
 
     public WebSocketHandler(AuthDAO authDAO, GameDAO gameDAO){
         this.authDAO = authDAO;
@@ -117,7 +118,7 @@ public class WebSocketHandler {
         ChessMove move = makeMoveCommand.getMove();
         ChessPosition endPos = move.getEndPosition();
 
-        GameData gameData = GameService.findGame(makeMoveCommand.getGameID(), gameDAO);
+        gameData = GameService.findGame(makeMoveCommand.getGameID(), gameDAO);
 
         ChessGame game = gameData.game();
         ChessBoard board = game.getBoard();
@@ -184,9 +185,11 @@ public class WebSocketHandler {
             LoadGameMessage loadGameMessage = new LoadGameMessage(newGameData);
             //send LOAD_GAME message to all
             connections.broadcastToAll(loadGameMessage.toString(), gameID);
+            String startCol = getRowLetter(username, move.getStartPosition());
+            String endCol = getRowLetter(username, move.getEndPosition());
 
-            var message = String.format("%s made a move from %s to %s",
-                    username, move.getStartPosition().toString(), move.getEndPosition().toString());
+            var message = String.format("%s made a move from %s%d to %s%d",
+                    username, startCol, move.getStartPosition().getRow(), endCol, move.getEndPosition().getRow());
             NotificationMessage notificationMessage = new NotificationMessage(message);
             //send Notification to all but root client
             connections.broadcastNotToUser(notificationMessage.toString(), gameID, username);
@@ -199,19 +202,50 @@ public class WebSocketHandler {
                 connections.broadcastToAll(notifMessage.toString(), gameID);
             }
             if (game.isInCheckmate(game.getTeamTurn())) {
-                checkMsg += "Player is in checkmate";
+                checkMsg += teamColor + " is in checkmate";
                 NotificationMessage notifMessage = new NotificationMessage(checkMsg);
                 connections.broadcastToAll(notifMessage.toString(), gameID);
                 game.setGameOver(true);
             }
             if (game.isInStalemate(game.getTeamTurn())) {
-                checkMsg += "Player is in stalemate";
+                checkMsg += teamColor + " is in stalemate";
                 NotificationMessage notifMessage = new NotificationMessage(checkMsg);
                 connections.broadcastToAll(notifMessage.toString(), gameID);
                 game.setGameOver(true);
             }
 
         }
+    }
+
+    private String getRowLetter(String username, ChessPosition startPosition) {
+        int col = startPosition.getColumn();
+        switch (col) {
+            case 1 -> {
+                return "a";
+            }
+            case 2 -> {
+                return "b";
+            }
+            case 3 -> {
+                return "c";
+            }
+            case 4 -> {
+                return "d";
+            }
+            case 5 -> {
+                return "e";
+            }
+            case 6 -> {
+                return "f";
+            }
+            case 7 -> {
+                return "g";
+            }
+            case 8 -> {
+                return "h";
+            }
+        }
+        return "z";
     }
 
     private boolean isMoveValid(ChessPosition endPos, Collection<ChessMove> validMoves) {
