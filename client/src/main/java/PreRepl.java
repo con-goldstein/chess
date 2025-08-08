@@ -14,7 +14,7 @@ public class PreRepl {
     Repl repl;
     String username;
 
-    public PreRepl(ServerFacade serverFacade, Repl repl){
+    public PreRepl(ServerFacade serverFacade, Repl repl) throws Exception {
          this.server = serverFacade;
          this.repl = repl;
          postRepl = new PostRepl(server, this, repl);
