@@ -17,7 +17,7 @@ public class Repl implements ServerMessageObserver {
     public boolean loggedIn;
     public final Scanner scanner = new Scanner(System.in);
 
-    public Repl(){
+    public Repl() throws Exception {
         this.server = new ServerFacade("http://localhost:8080");
         this.preRepl = new PreRepl(server, this);
         this.loggedIn = false;
