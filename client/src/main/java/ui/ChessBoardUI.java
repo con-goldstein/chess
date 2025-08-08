@@ -4,12 +4,14 @@ import chess.*;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 
 import static ui.EscapeSequences.*;
 
 public class ChessBoardUI {
     private final ChessBoard board;
     public static boolean whitePlayer;
+    Collection<ChessMove> moves;
 
 public ChessBoardUI(ChessBoard board){
     this.board = (board != null) ? board : new ChessGame().getBoard();
@@ -19,7 +21,7 @@ public ChessBoardUI(ChessBoard board){
 public static void main(String[] args) {
     ChessBoard board = new ChessGame().getBoard();
     ChessBoardUI ui = new ChessBoardUI(board);
-    ui.run("WHITE");
+    ui.run("BLACK");
 }
 
 public void run(String color){
@@ -63,12 +65,13 @@ public void run(String color){
     }
 
     private void drawChessBoard(PrintStream out) {
-    if (whitePlayer){
+    if (!whitePlayer){
         for (int boardRow = 1; boardRow <= 8; boardRow++) {
             drawColumnHeader(out, boardRow);
             drawRowOfSquares(out, boardRow);
             drawColumnHeader(out, boardRow);
             out.println(RESET_BG_COLOR);
+            out.print(RESET_TEXT_COLOR);
         }
     }
     else{
@@ -77,6 +80,7 @@ public void run(String color){
             drawRowOfSquares(out, boardRow);
             drawColumnHeader(out, boardRow);
             out.println(RESET_BG_COLOR);
+            out.print(RESET_TEXT_COLOR);
         }
     }
     }
@@ -95,13 +99,42 @@ public void run(String color){
 
 
     private void drawSquare(PrintStream out, int row, int col){
-    boolean isWhite = (row + col) % 2 == 0;
+    boolean isWhite = (row + col) % 2 == 1;
+    boolean highlighted = false;
     //set square to white or black
         if (isWhite){
-            out.print(SET_BG_COLOR_LIGHT_GREY);
+            ChessPosition pos = new ChessPosition(row, col);
+            if (moves != null){
+                for (ChessMove move : moves){
+                    ChessPosition highlightedPos = move.getEndPosition();
+                    if (pos.equals(highlightedPos)){
+                        highlighted = true;
+                    }
+                }
+            }
+            if (highlighted){
+                out.print(SET_BG_COLOR_YELLOW);
+            }
+            else {
+                out.print(SET_BG_COLOR_LIGHT_GREY);
+            }
         }
         else {
-            out.print(SET_BG_COLOR_DARK_GREEN);
+            ChessPosition pos = new ChessPosition(row, col);
+            if (moves != null){
+                for (ChessMove move : moves){
+                    ChessPosition highlightedPos = move.getEndPosition();
+                    if (pos.equals(highlightedPos)){
+                        highlighted = true;
+                    }
+                }
+            }
+            if (highlighted){
+                out.print(SET_BG_COLOR_YELLOW);
+            }
+            else {
+                out.print(SET_BG_COLOR_DARK_GREEN);
+            }
         }
         ChessPiece piece = board.getPiece(new ChessPosition(row, col));
         if (piece != null){
@@ -118,21 +151,21 @@ public void run(String color){
         switch (color){
             case WHITE:
                 return switch (type) {
-                    case KING -> WHITE_KING;
-                    case QUEEN -> WHITE_QUEEN;
-                    case BISHOP -> WHITE_BISHOP;
-                    case KNIGHT -> WHITE_KNIGHT;
-                    case ROOK -> WHITE_ROOK;
-                    case PAWN -> WHITE_PAWN;
-                };
-            case BLACK:
-                return switch (type) {
                     case KING -> BLACK_KING;
                     case QUEEN -> BLACK_QUEEN;
                     case BISHOP -> BLACK_BISHOP;
                     case KNIGHT -> BLACK_KNIGHT;
                     case ROOK -> BLACK_ROOK;
                     case PAWN -> BLACK_PAWN;
+                };
+            case BLACK:
+                return switch (type) {
+                    case KING -> WHITE_KING;
+                    case QUEEN -> WHITE_QUEEN;
+                    case BISHOP -> WHITE_BISHOP;
+                    case KNIGHT -> WHITE_KNIGHT;
+                    case ROOK -> WHITE_ROOK;
+                    case PAWN -> WHITE_PAWN;
                 };
         }
         return " ";
@@ -143,11 +176,25 @@ public void run(String color){
         out.print(SET_BG_COLOR_DARK_GREY);
         String symbol;
         if (whitePlayer) {
-            symbol = Integer.toString(Math.abs(9 - boardRow));
+            symbol = Integer.toString(Math.abs(boardRow));
         }
         else{
-            symbol = Integer.toString(Math.abs(boardRow - 9));
+            symbol = Integer.toString(Math.abs(boardRow));
         }
         out.print(SET_TEXT_COLOR_MAGENTA + " " + symbol + " " + RESET_TEXT_COLOR);
+    }
+
+    public void highlight(Collection<ChessMove> validMoves, boolean whitePlayer) {
+        for (ChessMove move : validMoves) {
+            ChessPosition position = move.getEndPosition();
+//            int row = position.getRow();
+//            int col = position.getColumn();
+            moves = validMoves;
+        }
+        if (whitePlayer) {
+            run("WHITE");
+        } else {
+            run("BLACK");
+        }
     }
 }
