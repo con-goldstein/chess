@@ -10,4 +10,8 @@ public class NotificationMessage extends ServerMessage {
     public String toString() {
         return new Gson().toJson(this);
     }
+
+    public String getMessage() {
+        return message;
+    }
 }
