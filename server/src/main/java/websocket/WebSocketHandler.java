@@ -54,7 +54,7 @@ public class WebSocketHandler {
             }
             if (game.game().isInCheckmate(game.game().getTeamTurn())){
                 //send error message to user only
-                ErrorMessage errorMsg = new ErrorMessage("You are in checkmate, cannot make valid move");
+                ErrorMessage errorMsg = new ErrorMessage("Game is over");
                 connections.broadcastToUser(errorMsg.toString(), gameID, username);
             }
             else{
@@ -66,7 +66,7 @@ public class WebSocketHandler {
                 //authenticate authToken & gameID
                 try{
                     authDAO.getauthData(authToken);
-                    GameData gameData = GameService.findGame(gameID, gameDAO);
+                    GameService.findGame(gameID, gameDAO);
                 } catch (DataAccessException e){
                     ErrorMessage errmsg = new ErrorMessage("error: Invalid authToken or gameDAO");
                     connections.broadcastToUser(errmsg.toString(), gameID, username);
@@ -103,7 +103,7 @@ public class WebSocketHandler {
             string += "observer";
         }
 
-        LoadGameMessage loadGameMessage = new LoadGameMessage(game.game());
+        LoadGameMessage loadGameMessage = new LoadGameMessage(game);
         connections.broadcastToUser(loadGameMessage.toString(), gameID, username);
 
         var message = String.format("%s has joined the game as %s", username, string);
@@ -116,16 +116,19 @@ public class WebSocketHandler {
         //check valid moves
         ChessMove move = makeMoveCommand.getMove();
         ChessPosition endPos = move.getEndPosition();
+
         GameData gameData = GameService.findGame(makeMoveCommand.getGameID(), gameDAO);
+
         ChessGame game = gameData.game();
         ChessBoard board = game.getBoard();
+
         Collection<ChessMove> validMoves = game.validMoves(move.getStartPosition());
 
         ChessGame.TeamColor teamColor = game.getTeamTurn();
         ChessGame.TeamColor pieceColor = board.getPiece(move.getStartPosition()).getTeamColor();
 
-        if ((gameData.whiteUsername() == null) | (gameData.blackUsername() == null)){
-            ErrorMessage newErrorMessage = new ErrorMessage("Error: Wait for both players to join before making an action");
+        if (game.gameOver()){
+            ErrorMessage newErrorMessage = new ErrorMessage("Error: Game is over");
             connections.broadcastToUser(newErrorMessage.toString(), gameID, username);
             return;
         }
@@ -171,13 +174,14 @@ public class WebSocketHandler {
         ChessGame game = gameData.game();
         boolean isValid = isMoveValid(endPos, validMoves);
         if (!isValid) {
-            ErrorMessage errmsg = new ErrorMessage("error: Invalid authToken or gameDAO");
+            ErrorMessage errmsg = new ErrorMessage("error: Invalid move");
             connections.broadcastToUser(errmsg.toString(), gameID, username);
         } else {
             //update the board (make the move)
             game.makeMove(move);
-            gameDAO.addGame(gameData);
-            LoadGameMessage loadGameMessage = new LoadGameMessage(game);
+            GameData newGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
+            gameDAO.addGame(newGameData);
+            LoadGameMessage loadGameMessage = new LoadGameMessage(newGameData);
             //send LOAD_GAME message to all
             connections.broadcastToAll(loadGameMessage.toString(), gameID);
 
@@ -187,9 +191,10 @@ public class WebSocketHandler {
             //send Notification to all but root client
             connections.broadcastNotToUser(notificationMessage.toString(), gameID, username);
 
+            ChessGame.TeamColor teamColor = game.getTeamTurn();
             String checkMsg = "";
-            if (game.isInCheck(game.getTeamTurn()) & !game.isInCheckmate(game.getTeamTurn())) {
-                checkMsg += "Player is in check";
+            if (game.isInCheck(teamColor) & !game.isInCheckmate(teamColor)) {
+                checkMsg += teamColor + " is in check";
                 NotificationMessage notifMessage = new NotificationMessage(checkMsg);
                 connections.broadcastToAll(notifMessage.toString(), gameID);
             }
