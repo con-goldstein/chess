@@ -20,120 +20,129 @@ import static ui.EscapeSequences.*;
 public class InGame implements ServerMessageObserver {
     public final Scanner scanner = new Scanner(System.in);
     websocket.WebSocketFacade ws;
-    boolean whitePlayer;
-    ChessGame game;
-    GameData gameData;
-    public InGame() throws Exception {
-        ws = new WebSocketFacade(this);
-    }
+    boolean whitePlayer = true;
+    GameData gameData = null;
 
 
-    public void run(HashMap<Integer, GameData> gamesMap, String[] splitResult, String authToken, String username)
-            throws IOException, DataAccessException {
+    public void run(HashMap<Integer, GameData> gamesMap, String[] splitResult, String authToken, String username) {
+        if (splitResult.length == 3){
+            String color = splitResult[2];
+             if (color.equals("BLACK")){
+                 whitePlayer = false;
+             }
+        }
         int hashMapKey = parseInt(splitResult[1]);
-        if (hashMapKey == -1){
+        if (hashMapKey == -1) {
             System.out.println("gameid == -1, game not found");
         }
         gameData = gamesMap.get(hashMapKey);
-        if (gameData == null){
+        if (gameData == null) {
             System.out.println(RESET_TEXT_COLOR + "please list the games before joining");
             return;
         }
-        game = gameData.game();
         int gameID = gameData.gameID();
-        ChessBoard board = game.getBoard();
+
+
         String action = splitResult[0];
-        //set if user is playing white or black
-        if (username.equals(gameData.whiteUsername())){
-            whitePlayer = true;
-        }
-        else {
-            whitePlayer = false;
-        }
         //connect to server
-        ws.connectToServer(authToken, gameID);
+        try {
+            ws = new WebSocketFacade(this);
+            ws.connectToServer(authToken, gameID);
+            scanner.nextLine();
 
-        String helpLine = "help - with possible commands\n" +
-                "redraw - to redraw game board\n" +
-                "leave - to leave the game\n" +
-                "move <starting position> <ending position> - to make a move\n" +
-                "resign - to resign from the game\n" +
-                "highlight <piece position> - to highlight all legal moves on chessboard for a piece";
-        System.out.println(RESET_TEXT_COLOR + helpLine);
-        while (true) {
-            System.out.print(SET_TEXT_COLOR_GREEN + " >>> " + RESET_TEXT_COLOR);
-            String[] result = scanner.nextLine().split(" ");
-            String keyword = result[0];
-            switch (keyword){
-                case "help":
-                    System.out.println(helpLine);
-                    break;
-                case "redraw":
-                    redraw(gameData, action, splitResult);
-                    break;
-                case "leave":
-                    ws.leave(authToken, gameID);
-                    return;
-                case "move":
-                    if (result.length != 3){
-                        System.out.println(SET_TEXT_COLOR_GREEN +
-                                "Please enter keyword, with current piece position and where you would like it to go" + RESET_TEXT_COLOR);
-                        break;
-                    }
-                    else{
-                        ChessMove move = getMove(result, gameData);
-                        ws.makeMove(authToken, gameID, move);
-                        break;
-                    }
+            String helpLine = "help - with possible commands\n" +
+                    "redraw - to redraw game board\n" +
+                    "leave - to leave the game\n" +
+                    "move <starting position> <ending position> - to make a move\n" +
+                    "resign - to resign from the game\n" +
+                    "highlight <piece position> - to highlight all legal moves on chessboard for a piece";
+            System.out.println(RESET_TEXT_COLOR + helpLine);
+            while (true) {
+                try {
+                    System.out.flush();
+                    System.out.print(SET_TEXT_COLOR_GREEN + ">>> " + RESET_TEXT_COLOR);
+                    String[] result = scanner.nextLine().split(" ");
+                    String keyword = result[0];
+                    switch (keyword) {
+                        case "help":
+                            System.out.println(helpLine);
+                            break;
+                        case "redraw":
+                            redraw(action, splitResult);
+                            break;
+                        case "leave":
+                            ws.leave(authToken, gameID);
+                            return;
+                        case "move":
+                            if (result.length != 3) {
+                                System.out.println(SET_TEXT_COLOR_GREEN +
+                                        "Please enter keyword, with current piece position and where you would like it to go" + RESET_TEXT_COLOR);
+                                break;
+                            } else {
+                                ChessMove move = getMove(result, gameData, username);
+                                ws.makeMove(authToken, gameID, move);
+                                break;
+                            }
 
-                case "resign":
-                    System.out.println(SET_TEXT_COLOR_GREEN + "Are you sure you want to resign? (Y/N)" + RESET_TEXT_COLOR);
-                    String newResult = scanner.nextLine().toLowerCase();
-                    if (newResult.equals("y")){
-                        System.out.println(helpLine);
-                        ws.resign(authToken, gameID);
-                        break;
-                    }
-                    break;
-                case "highlight":
-                    if (result.length != 2){
-                        System.out.println("Please input highlight and then piece you would like to see");
-                    }
-                    else{
+                        case "resign":
+                            System.out.println(SET_TEXT_COLOR_GREEN + "Are you sure you want to resign? (Y/N)" + RESET_TEXT_COLOR);
+                            String newResult = scanner.nextLine().toLowerCase();
+                            if (newResult.equals("y")) {
+                                System.out.println(helpLine);
+                                ws.resign(authToken, gameID);
+                                break;
+                            }
+                            break;
+                        case "highlight":
+                            if (result.length != 2) {
+                                System.out.println("Please input highlight and then piece you would like to see");
+                            } else {
 
-                        String startPos = splitResult[1];
-                        int startCol = findColumn(startPos.split("")[0]);
-                        int startRow = parseInt(startPos.split("")[1]);
-                        ChessPosition startPosition = new ChessPosition(startRow, startCol);
-                        ChessPiece piece = board.getPiece(startPosition);
-                        Collection<ChessMove> pieceMoves = piece.pieceMoves(board, startPosition);
-                        ChessBoardUI boardUI = new ChessBoardUI(game.getBoard());
-                        boardUI.highlight(pieceMoves, whitePlayer);
+                                String startPos = result[1];
+                                int startCol = findColumn(startPos.split("")[0]);
+                                int startRow = parseInt(startPos.split("")[1]);
+                                ChessPosition startPosition = new ChessPosition(startRow, startCol);
+//                                ChessPiece piece = gameData.game().getBoard().getPiece(startPosition);
+//                                Collection<ChessMove> pieceMoves = piece.pieceMoves(gameData.game().getBoard(), startPosition);
+                                Collection<ChessMove> pieceMoves = gameData.game().validMoves(startPosition);
+                                ChessBoardUI boardUI = new ChessBoardUI(gameData.game().getBoard());
+                                boardUI.highlight(pieceMoves, whitePlayer);
+                                break;
+                            }
+                        default:
+                            System.out.println(RESET_TEXT_COLOR + "Please choose an action");
                     }
-                default:
-                    System.out.println("Please choose an action");
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             }
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
 
 
-    public void redraw(GameData game, String action, String[] result){
-        ChessBoardUI boardUI = new ChessBoardUI(game.game().getBoard());
+    public void redraw(String action, String[] result){
+        ChessBoardUI boardUI = new ChessBoardUI(gameData.game().getBoard());
         if (action.equals("observe")){
             boardUI.run("WHITE");
         }
         else {
             if (result[2].equals("WHITE")){
                 boardUI.run("WHITE");
+                whitePlayer = true;
             }
             else if (result[2].equals("BLACK")){
                 boardUI.run("BLACK");
+                whitePlayer = false;
             }
             else{
                 System.out.println("Error");
             }
         }
     }
+
     public void notify(String message){
         try {
             ServerMessage msg = new Gson().fromJson(message, ServerMessage.class);
@@ -148,7 +157,12 @@ public class InGame implements ServerMessageObserver {
                     break;
                 case LOAD_GAME:
                     LoadGameMessage loadGameMessage = new Gson().fromJson(message, LoadGameMessage.class);
-//                    System.out.println(loadGameMessage.getGame());
+                    gameData = loadGameMessage.getGame();
+                    ChessBoardUI boardUI = new ChessBoardUI(gameData.game().getBoard());
+                    if (whitePlayer){
+                        boardUI.run("WHITE");
+                    }
+                    else {boardUI.run("BLACK");}
                     break;
             }
         } catch (JsonSyntaxException e) {
@@ -156,9 +170,8 @@ public class InGame implements ServerMessageObserver {
         }
     }
 
-    public ChessMove getMove(String[] splitResult, GameData game){
+    public ChessMove getMove(String[] splitResult, GameData game, String username){
         ChessMove move;
-
         String startPos = splitResult[1];
         int startCol = findColumn(startPos.split("")[0]);
         int startRow = parseInt(startPos.split("")[1]);
@@ -208,32 +221,32 @@ public class InGame implements ServerMessageObserver {
     }
 
     private int findColumn(String col) {
-        if (whitePlayer){
-            switch (col){
-                case "a" -> {return 1;}
-                case "b" -> {return 2;}
-                case "c" -> {return 3;}
-                case "d" -> {return 4;}
-                case "e" -> {return 5;}
-                case "f" -> {return 6;}
-                case "g" -> {return 7;}
-                case "h" -> {return 8;}
+        switch (col) {
+            case "a" -> {
+                return 1;
             }
-            return 0;
-        }
-        else {
-            switch (col){
-                case "a" -> {return 8;}
-                case "b" -> {return 7;}
-                case "c" -> {return 6;}
-                case "d" -> {return 5;}
-                case "e" -> {return 4;}
-                case "f" -> {return 3;}
-                case "g" -> {return 2;}
-                case "h" -> {return 1;}
+            case "b" -> {
+                return 2;
             }
-            return 0;
+            case "c" -> {
+                return 3;
+            }
+            case "d" -> {
+                return 4;
+            }
+            case "e" -> {
+                return 5;
+            }
+            case "f" -> {
+                return 6;
+            }
+            case "g" -> {
+                return 7;
+            }
+            case "h" -> {
+                return 8;
+            }
         }
+        return 0;
     }
-
 }
