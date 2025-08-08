@@ -22,15 +22,14 @@ HashMap<Integer, GameData> gamesMap = new HashMap<>();
 Repl repl;
 InGame inGameClient;
 public boolean inGame = false;
-public PostRepl(ServerFacade serverFacade, PreRepl preRepl, Repl repl){
+public PostRepl(ServerFacade serverFacade, PreRepl preRepl, Repl repl) throws Exception {
     this.server = serverFacade;
     this.preRepl = preRepl;
     this.repl = repl;
-//    inGameClient = new InGame(gamesMap);
+    inGameClient = new InGame();
 }
 
-public void postEval(String username) throws BadRequestException, AlreadyTakenException,
-        UnauthorizedException, DataAccessException, IOException {
+public void postEval(String username) throws UnauthorizedException, BadRequestException, AlreadyTakenException {
     String helpLine = "create <Name> - a game\n" +
             "list - game\njoin <ID> [WHITE/BLACK] - a game\nobserve <ID> - a game\nlogout- when you are done\n" +
             "quit - playing chess\nhelp - with possible commands";
@@ -61,11 +60,13 @@ public void postEval(String username) throws BadRequestException, AlreadyTakenEx
                     listGames(server, gamesMap);
                     break;
                 case "join":
-                    joinGame(splitResult, server, gamesMap, inGame);
-                    inGameClient.run(gamesMap, splitResult, server.authToken, username);
+                    //changed joinGame to return gameID
+                    int id = joinGame(splitResult, server, gamesMap, inGame);
+                    if (id != -1){
+                    inGameClient.run(gamesMap, splitResult, server.authToken, username);}
                     break;
                 case "observe":
-                    observeGame(splitResult, gamesMap);
+                    int gameNumber = observeGame(splitResult, gamesMap);
                     inGameClient.run(gamesMap, splitResult, server.authToken, username);
                     break;
                 default:
@@ -74,16 +75,17 @@ public void postEval(String username) throws BadRequestException, AlreadyTakenEx
     }
 }
 
-public static void observeGame(String[] splitResult, HashMap<Integer, GameData> gamesMap){
+public static Integer observeGame(String[] splitResult, HashMap<Integer, GameData> gamesMap){
     if (splitResult.length == 2) {
         try {
             int gameNumber = Integer.parseInt(splitResult[1]);
             if (gamesMap.containsKey(gameNumber)) {
-                gamesMap.get(gameNumber).gameID();
+                int gameID = gamesMap.get(gameNumber).gameID();
                 System.out.println("game is observable");
                 ChessGame game = gamesMap.get(gameNumber).game();
                 ChessBoardUI chessBoard = new ChessBoardUI(game.getBoard());
                 chessBoard.run("WHITE");
+                return gameID;
             }
             else {
                 System.out.println("Game not found, choose another to observe");
@@ -95,6 +97,7 @@ public static void observeGame(String[] splitResult, HashMap<Integer, GameData> 
     else {
         System.out.println("Please provide gameName after keyword observe");
     }
+    return -1;
 }
 
 public static void createGame(String[] splitResult, ServerFacade server) throws BadRequestException {
@@ -111,12 +114,21 @@ public static void createGame(String[] splitResult, ServerFacade server) throws 
     }
 }
 
-public static void joinGame(String[] splitResult, ServerFacade server, HashMap<Integer, GameData> gamesMap,
+
+
+
+
+
+
+
+
+
+public static Integer joinGame(String[] splitResult, ServerFacade server, HashMap<Integer, GameData> gamesMap,
                             boolean inGame) throws AlreadyTakenException {
     try {
         if (inGame){
             System.out.println("You are already playing, please first finish your game to join another");
-            return;
+            return 0;
         }
         if (splitResult.length == 3) {
             int gameNumber = Integer.parseInt(splitResult[1]);
@@ -125,15 +137,14 @@ public static void joinGame(String[] splitResult, ServerFacade server, HashMap<I
             }
             //goes into the map and gets the gameID from the listed number
             if (gamesMap.containsKey(gameNumber)) {
-                int gameID = gamesMap.get(gameNumber).gameID();
-                server.join(new JoinRequest(splitResult[2], gameID));
-                System.out.println("Game joined as " + splitResult[2]);
 
-                //get and print out ChessBoard
-                ChessGame game = gamesMap.get(gameNumber).game();
-                ChessBoardUI chessBoard = new ChessBoardUI(game.getBoard());
-                chessBoard.run(splitResult[2]);
-                inGame = true;
+                int gameID = gamesMap.get(gameNumber).gameID();
+                try {
+                    server.join(new JoinRequest(splitResult[2], gameID));
+                    return gameID;
+                } catch (AlreadyTakenException | UnauthorizedException e){
+                    System.out.println("Spot already taken");
+                }
             } else {
                 System.out.println("game not found, please try again");
             }
@@ -143,11 +154,10 @@ public static void joinGame(String[] splitResult, ServerFacade server, HashMap<I
         }
     }catch (NumberFormatException e) {
         System.out.println("Invalid game number: must be an integer.");
-    } catch (UnauthorizedException e) {
-        System.out.println("You are not authorized to join this game.");
     } catch (BadRequestException e) {
         System.out.println("Bad request: " + e.getMessage());
     }
+    return -1;
 }
 
 public static void listGames(ServerFacade server, HashMap<Integer, GameData> gamesMap)
