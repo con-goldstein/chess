@@ -2,10 +2,11 @@ package websocket.messages;
 import com.google.gson.Gson;
 
 import chess.ChessGame;
+import model.GameData;
 
 public class LoadGameMessage extends ServerMessage{
-    ChessGame game;
-    public LoadGameMessage(ChessGame game){
+    GameData game;
+    public LoadGameMessage(GameData game){
         super(ServerMessageType.LOAD_GAME);
         this.game = game;
     }
@@ -13,7 +14,7 @@ public class LoadGameMessage extends ServerMessage{
         return new Gson().toJson(this);
     }
 
-    public ChessGame getGame(){
+    public GameData getGame(){
         return game;
     }
 }
